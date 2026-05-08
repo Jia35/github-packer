@@ -81,30 +81,6 @@
     return `已選取 ${itemCount} 項`;
   }
 
-  function findToolbarHost(items) {
-    if (!items.length) {
-      return null;
-    }
-
-    const headings = Array.from(document.querySelectorAll(constants.selectors.toolbarHeadings));
-    const anchorHeading = headings.find((heading) => {
-      const text = heading.textContent.trim();
-      return text === "Folders and files" || text === "Repository files navigation";
-    });
-
-    if (anchorHeading && anchorHeading.parentElement) {
-      return anchorHeading.parentElement;
-    }
-
-    const firstRow = items[0].element;
-
-    if (!firstRow || !firstRow.parentElement) {
-      return null;
-    }
-
-    return firstRow.parentElement;
-  }
-
   function syncSelectionVisibility() {
     document.documentElement.classList.toggle(
       constants.activeSelectionClassName,
@@ -137,9 +113,7 @@
   }
 
   function ensureToolbar(items, handlers) {
-    const host = findToolbarHost(items);
-
-    if (!host) {
+    if (!items.length || !document.body) {
       return null;
     }
 
@@ -179,12 +153,12 @@
       left.appendChild(selectAllButton);
       left.appendChild(clearSelectionButton);
       left.appendChild(packButton);
-      toolbar.appendChild(left);
       toolbar.appendChild(status);
+      toolbar.appendChild(left);
     }
 
     if (!toolbar.isConnected) {
-      host.parentElement.insertBefore(toolbar, host);
+      document.body.appendChild(toolbar);
     }
 
     return toolbar;
