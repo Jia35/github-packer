@@ -123,17 +123,17 @@
       return;
     }
 
-    const target =
-      link.closest("td") ||
-      link.closest('[role="gridcell"]') ||
-      link.parentElement;
+    const container =
+      link.querySelector("div") ||
+      link.firstElementChild ||
+      link;
 
-    if (!target) {
+    if (!container) {
       return;
     }
 
-    target.classList.add("github-packer-inline-target");
-    ensureSpacer(target);
+    container.classList.add("github-packer-parent-directory-target");
+    ensureSpacer(container);
   }
 
   function ensureToolbar(items, handlers) {

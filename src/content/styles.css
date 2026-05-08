@@ -63,6 +63,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
   margin-right: 8px;
   vertical-align: middle;
   flex: 0 0 auto;
@@ -81,6 +84,11 @@
   flex-direction: row !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
+}
+
+.github-packer-parent-directory-target {
+  display: flex;
+  align-items: center;
 }
 
 [data-github-packer-row="true"]:hover .github-packer-checkbox,
