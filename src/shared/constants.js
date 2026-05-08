@@ -32,6 +32,15 @@
       clearAll: "取消全選",
       pack: "打包下載",
       preparing: "準備中..."
+    },
+    messages: {
+      idle: "尚未選取項目",
+      resolvingBranch: "確認分支中...",
+      loadingTree: "讀取檔案樹中...",
+      matchingFiles: "整理選取項目中...",
+      downloadingFiles: "下載檔案中...",
+      buildingArchive: "建立 ZIP 中...",
+      completed: "下載已開始"
     }
   };
 })();

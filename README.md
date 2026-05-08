@@ -1,15 +1,16 @@
 # GitHub Packer
 
-Chrome extension prototype for selecting files or folders from a GitHub repository page and preparing them for packaging.
+Chrome extension prototype for selecting files or folders from a GitHub repository page and downloading them as a ZIP archive.
 
-## Phase 1 scope
+## Current scope
 
 - Inject per-row checkboxes into GitHub repository file lists
 - Add a toolbar with `全選` and `打包下載`
 - Track selections across GitHub SPA navigation
 - Re-render controls when the file list changes
-
-The actual repository tree expansion and ZIP download flow is intentionally left for phase 2.
+- Resolve selected files and folders against the current branch
+- Download file contents from GitHub and build a ZIP in the browser
+- Trigger a local ZIP download for the selected items
 
 ## Load locally
 

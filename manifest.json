@@ -20,6 +20,7 @@
         "src/shared/constants.js",
         "src/shared/state.js",
         "src/shared/github.js",
+        "src/shared/packager.js",
         "src/content/ui.js",
         "src/content/main.js"
       ],

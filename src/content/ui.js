@@ -58,7 +58,7 @@
 
   function getToolbarText(itemCount) {
     if (itemCount <= 0) {
-      return "尚未選取項目";
+      return constants.messages.idle;
     }
 
     return `已選取 ${itemCount} 項`;
@@ -147,13 +147,14 @@
     const status = toolbar.querySelector('[data-role="status"]');
     const allVisibleSelected = items.length > 0 && visibleSelectedCount === items.length;
     const isPacking = app.state.isPacking();
+    const packingMessage = app.state.getPackingMessage();
 
     toggleAllButton.textContent = allVisibleSelected
       ? constants.labels.clearAll
       : constants.labels.selectAll;
     packButton.textContent = isPacking ? constants.labels.preparing : constants.labels.pack;
     packButton.disabled = isPacking || selectedCount === 0;
-    status.textContent = getToolbarText(selectedCount);
+    status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
     toolbar.classList.toggle(constants.loadingClassName, isPacking);
   }
 
@@ -175,14 +176,31 @@
     });
   }
 
-  function showPhaseOneAlert(items) {
-    const selectedItems = items.map((item) => `${item.kind === "directory" ? "[DIR]" : "[FILE]"} ${item.path}`);
-    const preview = selectedItems.slice(0, 8).join("\n");
-    const suffix = selectedItems.length > 8 ? `\n...以及另外 ${selectedItems.length - 8} 項` : "";
+  function showPackResult(result) {
+    if (!result) {
+      return;
+    }
 
-    window.alert(
-      `第一階段已完成 UI 注入與選取狀態管理。\n\n目前共選取 ${selectedItems.length} 項：\n${preview}${suffix}\n\n實際打包下載流程會在第二階段接上。`
-    );
+    const notices = [];
+
+    if (result.truncated) {
+      notices.push("這個儲存庫的檔案樹回傳結果被 GitHub 截斷，部分深層檔案可能未被包含。");
+    }
+
+    if (result.missing && result.missing.length) {
+      const preview = result.missing.slice(0, 6).join("\n");
+      const suffix = result.missing.length > 6 ? `\n...以及另外 ${result.missing.length - 6} 項` : "";
+      notices.push(`部分項目在目前分支中找不到，已略過：\n${preview}${suffix}`);
+    }
+
+    if (notices.length) {
+      window.alert(notices.join("\n\n"));
+    }
+  }
+
+  function showPackError(error) {
+    const message = error && error.message ? error.message : "打包下載失敗";
+    window.alert(message);
   }
 
   app.ui = {
@@ -190,6 +208,7 @@
     insertCheckboxIntoRow,
     syncCheckboxes,
     syncToolbar,
-    showPhaseOneAlert
+    showPackResult,
+    showPackError
   };
 })();

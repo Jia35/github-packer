@@ -4,7 +4,8 @@
   const state = {
     selectedItems: new Map(),
     visibleItems: [],
-    isPacking: false
+    isPacking: false,
+    packingMessage: ""
   };
 
   function cloneItem(item) {
@@ -46,9 +47,18 @@
     },
     setPacking(isPacking) {
       state.isPacking = Boolean(isPacking);
+      if (!state.isPacking) {
+        state.packingMessage = "";
+      }
     },
     isPacking() {
       return state.isPacking;
+    },
+    setPackingMessage(message) {
+      state.packingMessage = message || "";
+    },
+    getPackingMessage() {
+      return state.packingMessage;
     }
   };
 })();

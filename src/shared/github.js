@@ -103,7 +103,15 @@
     };
   }
 
-  function parseItemFromHref(href, context) {
+  function joinPath(basePath, name) {
+    if (!basePath) {
+      return name;
+    }
+
+    return `${basePath}/${name}`;
+  }
+
+  function parseItemFromHref(href, context, linkName) {
     if (!href || !context) {
       return null;
     }
@@ -118,15 +126,24 @@
       return null;
     }
 
+    const itemName = (linkName || "").trim();
     const prefix = isBlob ? blobPrefix : treePrefix;
     const remainder = decodedPath.slice(prefix.length);
     const branchPrefix = context.branch ? `${context.branch}/` : "";
-    let relativePath = remainder;
+    let relativePath = "";
 
-    if (context.branch && remainder === context.branch) {
+    if (itemName && typeof context.currentDirectoryPath === "string") {
+      relativePath = joinPath(context.currentDirectoryPath, itemName);
+    }
+
+    if (!relativePath && context.branch && remainder === context.branch) {
       relativePath = "";
-    } else if (branchPrefix && remainder.startsWith(branchPrefix)) {
+    } else if (!relativePath && branchPrefix && remainder.startsWith(branchPrefix)) {
       relativePath = remainder.slice(branchPrefix.length);
+    } else if (!relativePath && itemName) {
+      relativePath = itemName;
+    } else if (!relativePath) {
+      relativePath = remainder;
     }
 
     if (!relativePath) {
@@ -207,7 +224,7 @@
       }
 
       const row = getPrimaryRowCandidate(link) || getFallbackContainer(link);
-      const parsed = parseItemFromHref(link.href, context);
+      const parsed = parseItemFromHref(link.href, context, link.textContent);
 
       if (!row || !parsed) {
         return;

@@ -36,23 +36,38 @@
     refresh();
   }
 
-  function handlePack() {
+  async function handlePack() {
     const selectedItems = app.state.getSelectedItems();
+    const context = app.github.getRepositoryContext();
 
     if (!selectedItems.length || app.state.isPacking()) {
       return;
     }
 
     app.state.setPacking(true);
+    app.state.setPackingMessage(constants.messages.resolvingBranch);
     updateBeforeUnloadGuard();
     refresh();
 
-    window.setTimeout(() => {
-      app.ui.showPhaseOneAlert(selectedItems);
-      app.state.setPacking(false);
-      updateBeforeUnloadGuard();
+    try {
+      const result = await app.packager.packSelection(context, selectedItems, (message, detail) => {
+        app.state.setPackingMessage(detail ? `${message} (${detail})` : message);
+        refresh();
+      });
+
+      app.state.setPackingMessage(constants.messages.completed);
       refresh();
-    }, 250);
+      app.ui.showPackResult(result);
+    } catch (error) {
+      console.error("[GitHub Packer] pack failed", error);
+      app.ui.showPackError(error);
+    } finally {
+      window.setTimeout(() => {
+        app.state.setPacking(false);
+        updateBeforeUnloadGuard();
+        refresh();
+      }, 600);
+    }
   }
 
   function refresh() {
