@@ -208,6 +208,22 @@
     return link.parentElement || row;
   }
 
+  function isParentDirectoryRow(row, link) {
+    if (!row || !link) {
+      return false;
+    }
+
+    if (
+      link.getAttribute("aria-label") === "Parent directory" ||
+      link.getAttribute("data-testid") === "up-tree"
+    ) {
+      return true;
+    }
+
+    const heading = row.querySelector('[data-testid="screen-reader-heading"]');
+    return heading ? heading.textContent.trim().toLowerCase() === "parent directory" : false;
+  }
+
   function findRepositoryItems(context) {
     if (!context) {
       return [];
@@ -227,6 +243,10 @@
       const parsed = parseItemFromHref(link.href, context, link.textContent);
 
       if (!row || !parsed) {
+        return;
+      }
+
+      if (isParentDirectoryRow(row, link)) {
         return;
       }
 
@@ -258,6 +278,7 @@
   app.github = {
     getRepositoryContext,
     isSupportedRepositoryPage,
-    findRepositoryItems
+    findRepositoryItems,
+    isParentDirectoryRow
   };
 })();

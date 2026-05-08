@@ -45,6 +45,9 @@
 
       state.selectedItems.delete(item.path);
     },
+    clearSelection() {
+      state.selectedItems.clear();
+    },
     setPacking(isPacking) {
       state.isPacking = Boolean(isPacking);
       if (!state.isPacking) {

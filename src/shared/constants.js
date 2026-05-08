@@ -6,11 +6,13 @@
     toolbarId: "github-packer-toolbar",
     toolbarMarker: "data-github-packer-toolbar",
     rowMarker: "data-github-packer-row",
+    spacerMarker: "data-github-packer-spacer",
     checkboxMarker: "data-github-packer-checkbox",
     itemPathMarker: "data-github-packer-item-path",
     itemKindMarker: "data-github-packer-item-kind",
     selectedClassName: "github-packer-selected",
     loadingClassName: "github-packer-loading",
+    activeSelectionClassName: "github-packer-has-selection",
     currentDirectoryMeta: "github-packer-current-directory",
     renderDebounceMs: 120,
     selectors: {
@@ -30,6 +32,7 @@
     labels: {
       selectAll: "全選",
       clearAll: "取消全選",
+      clearSelection: "取消選取",
       pack: "打包下載",
       preparing: "準備中..."
     },

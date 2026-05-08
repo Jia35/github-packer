@@ -36,6 +36,11 @@
     refresh();
   }
 
+  function handleClearSelection() {
+    app.state.clearSelection();
+    refresh();
+  }
+
   async function handlePack() {
     const selectedItems = app.state.getSelectedItems();
     const context = app.github.getRepositoryContext();
@@ -94,6 +99,9 @@
     const items = app.github.findRepositoryItems(context);
 
     app.state.setVisibleItems(items);
+    document.querySelectorAll("tr, [role='row'], .Box-row, li").forEach((row) => {
+      app.ui.ensureParentDirectorySpacer(row);
+    });
 
     if (!items.length) {
       const existingToolbar = document.getElementById(constants.toolbarId);
@@ -111,6 +119,7 @@
 
     const toolbar = app.ui.ensureToolbar(items, {
       onToggleAll: handleToggleAll,
+      onClearSelection: handleClearSelection,
       onPack: handlePack
     });
 

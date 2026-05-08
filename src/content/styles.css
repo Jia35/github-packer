@@ -1,5 +1,5 @@
 #github-packer-toolbar {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -8,6 +8,10 @@
   border: 1px solid rgba(31, 35, 40, 0.12);
   border-radius: 12px;
   background: linear-gradient(135deg, #f6f8fa 0%, #ffffff 100%);
+}
+
+#github-packer-toolbar.github-packer-toolbar--visible {
+  display: flex;
 }
 
 .github-packer-toolbar__group {
@@ -62,6 +66,14 @@
   margin-right: 8px;
   vertical-align: middle;
   flex: 0 0 auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.github-packer-checkbox--spacer {
+  opacity: 1;
+  pointer-events: none;
 }
 
 .github-packer-inline-target {
@@ -69,6 +81,13 @@
   flex-direction: row !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
+}
+
+[data-github-packer-row="true"]:hover .github-packer-checkbox,
+[data-github-packer-row="true"].github-packer-selected .github-packer-checkbox,
+.github-packer-has-selection .github-packer-checkbox {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .github-packer-checkbox__input {
