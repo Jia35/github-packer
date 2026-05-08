@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Packer",
+  "version": "0.1.0",
+  "description": "Select GitHub files and folders directly from the repository view.",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "src/shared/constants.js",
+        "src/shared/state.js",
+        "src/shared/github.js",
+        "src/content/ui.js",
+        "src/content/main.js"
+      ],
+      "css": [
+        "src/content/styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
