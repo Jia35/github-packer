@@ -24,7 +24,7 @@ body {
     line-height: 1.5;
     color: var(--text-main);
     background-color: #f0f2f5;
-    padding: 40px 20px;
+    padding: 32px 20px;
 }
 
 .container {
@@ -37,7 +37,7 @@ body {
 }
 
 .header {
-    padding: 24px 32px;
+    padding: 20px 32px;
     background: #24292f;
     color: #ffffff;
     display: flex;
@@ -134,6 +134,22 @@ body {
     padding-right: 40px; /* 為右側按鈕留出空間 */
 }
 
+/* 輸入框與清除按鈕橫向佈局 */
+.input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-row .input-with-icon {
+    flex: 1;
+}
+
+.input-row #clear-button {
+    white-space: nowrap;
+    padding: 10px 16px;
+}
+
 .icon-button {
     position: absolute;
     right: 4px;
@@ -215,9 +231,17 @@ body {
     text-decoration: underline;
 }
 
-.actions {
-    display: flex;
-    gap: 12px;
+.main-actions {
+    margin-top: 24px;
+    padding-top: 24px;
+    margin-bottom: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.main-actions .button--primary {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
 }
 
 .button {
