@@ -204,14 +204,19 @@
 }
 
 [data-github-packer-row="true"]:hover [data-github-packer-target] > .github-packer-checkbox,
-[data-github-packer-row="true"].github-packer-selected [data-github-packer-target] > .github-packer-checkbox,
-.github-packer-has-selection [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+[data-github-packer-row="true"].github-packer-selected [data-github-packer-target] > .github-packer-checkbox {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* 隱藏深層巢狀項目的 checkbox，避免父資料夾 hover 時連動顯示子項目 */
-[data-github-packer-row="true"]:hover [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+/* 全域選取模式：強制顯示所有 Checkbox，不被 hover 重置規則干擾 */
+.github-packer-has-selection [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* 隱藏深層巢狀項目的 checkbox (僅在非全域選取模式下生效) */
+html:not(.github-packer-has-selection) [data-github-packer-row="true"]:hover [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
   opacity: 0;
   pointer-events: none;
 }
