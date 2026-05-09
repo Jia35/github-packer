@@ -153,7 +153,7 @@
     }
 
     app.state.setPacking(true);
-    app.state.setPackingMessage(constants.messages.resolvingBranch);
+    app.state.setPackingMessage(app.i18n.t('messages.resolvingBranch'));
     app.state.setFailedFiles([]); // 重新開始打包時清除舊紀錄
     app.state.setLastError(null);
     updateBeforeUnloadGuard();
