@@ -203,11 +203,23 @@
   align-items: center;
 }
 
-[data-github-packer-row="true"]:hover .github-packer-checkbox,
-[data-github-packer-row="true"].github-packer-selected .github-packer-checkbox,
-.github-packer-has-selection .github-packer-checkbox {
+[data-github-packer-row="true"]:hover [data-github-packer-target] > .github-packer-checkbox,
+[data-github-packer-row="true"].github-packer-selected [data-github-packer-target] > .github-packer-checkbox,
+.github-packer-has-selection [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* 隱藏深層巢狀項目的 checkbox，避免父資料夾 hover 時連動顯示子項目 */
+[data-github-packer-row="true"]:hover [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 確保直接被 hover 的子項目 checkbox 依然顯示 */
+[data-github-packer-row="true"] [data-github-packer-row="true"]:hover [data-github-packer-target] > .github-packer-checkbox {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .github-packer-checkbox__input {

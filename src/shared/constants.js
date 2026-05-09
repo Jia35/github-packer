@@ -8,6 +8,7 @@
     rowMarker: "data-github-packer-row",
     spacerMarker: "data-github-packer-spacer",
     checkboxMarker: "data-github-packer-checkbox",
+    targetMarker: "data-github-packer-target",
     itemPathMarker: "data-github-packer-item-path",
     itemKindMarker: "data-github-packer-item-kind",
     selectedClassName: "github-packer-selected",

@@ -62,7 +62,13 @@
       markRowSelection(item.element, checkbox.checked);
     });
 
+    // 阻止點擊 Checkbox 時觸發 GitHub 原生的行點擊行為
+    wrapper.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
     target.classList.add("github-packer-inline-target");
+    target.setAttribute(constants.targetMarker, "true");
 
     if (item.link && item.link.parentNode === target) {
       item.link.before(wrapper);
