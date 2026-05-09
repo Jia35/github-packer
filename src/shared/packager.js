@@ -107,6 +107,11 @@
   }
 
   async function fetchFileContent(context, branch, path) {
+    // // --- 測試用代碼：模擬特定檔案失敗 ---
+    // if (path.includes("README") || path.includes("LICENSE")) {
+    //   throw new Error("模擬下載失敗");
+    // }
+
     const response = await fetch(
       `https://raw.githubusercontent.com/${context.owner}/${context.repo}/${encodeURIComponent(branch)}/${encodePathSegments(path)}`,
       { credentials: "omit" }
@@ -299,20 +304,31 @@
     }
 
     updateProgress(onProgress, constants.messages.downloadingFiles, `0 / ${matched.files.length}`);
-    const downloadedFiles = await mapWithConcurrency(matched.files, 4, async (file, index) => {
-      const bytes = await fetchFileContent(context, branch, file.path);
+    const failed = [];
+    const downloadedFiles = (await mapWithConcurrency(matched.files, 4, async (file, index) => {
+      try {
+        const bytes = await fetchFileContent(context, branch, file.path);
 
-      updateProgress(
-        onProgress,
-        constants.messages.downloadingFiles,
-        `${index + 1} / ${matched.files.length}`
-      );
+        updateProgress(
+          onProgress,
+          constants.messages.downloadingFiles,
+          `${index + 1} / ${matched.files.length}`
+        );
 
-      return {
-        path: file.path,
-        bytes
-      };
-    });
+        return {
+          path: file.path,
+          bytes
+        };
+      } catch (error) {
+        console.error(`[GitHub Packer] Failed to download ${file.path}:`, error);
+        failed.push(file.path);
+        return null;
+      }
+    })).filter(Boolean);
+
+    if (!downloadedFiles.length) {
+      throw new Error("所有檔案均下載失敗，請檢查網路連線或 GitHub 狀態。");
+    }
 
     updateProgress(onProgress, constants.messages.buildingArchive);
     const blob = buildZipBlob(downloadedFiles);
@@ -321,6 +337,7 @@
     return {
       branch,
       fileCount: downloadedFiles.length,
+      failed,
       missing: matched.missing,
       truncated: tree.truncated
     };

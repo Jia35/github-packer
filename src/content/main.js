@@ -79,6 +79,7 @@
 
     app.state.setPacking(true);
     app.state.setPackingMessage(constants.messages.resolvingBranch);
+    app.state.setFailedFiles([]); // 重新開始打包時清除舊紀錄
     updateBeforeUnloadGuard();
     refresh();
 
@@ -89,6 +90,7 @@
         refresh();
       });
 
+      app.state.setFailedFiles(result.failed || []);
       app.state.setPackingMessage(constants.messages.completed);
       refresh();
       app.ui.showPackResult(result);

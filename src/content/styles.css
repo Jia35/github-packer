@@ -7,6 +7,7 @@
   --tp-btn-sec-border: rgba(205, 217, 229, 0.1);
   --tp-btn-sec-text: #adbac7;
   --tp-btn-sec-hover: #373e47;
+  --tp-error: #ff7b72;
   --tp-shadow: 
     0 10px 30px rgba(0, 0, 0, 0.2),
     0 20px 60px rgba(0, 0, 0, 0.3);
@@ -55,6 +56,7 @@
   --tp-btn-sec-border: rgba(31, 35, 40, 0.15);
   --tp-btn-sec-text: #1f2328;
   --tp-btn-sec-hover: #f3f4f6;
+  --tp-error: #cf222e;
   --tp-shadow: 
     0 10px 30px rgba(31, 35, 40, 0.15),
     0 20px 60px rgba(31, 35, 40, 0.1);
@@ -129,6 +131,16 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+.github-packer-toolbar__errors {
+  margin-bottom: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  border-left: 2px solid var(--tp-error);
+  padding-left: 8px;
+  background: rgba(255, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 .github-packer-button {

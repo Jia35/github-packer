@@ -6,7 +6,8 @@
     excludePaths: new Set(), // Set of paths
     visibleItems: [],
     isPacking: false,
-    packingMessage: ""
+    packingMessage: "",
+    failedFiles: []
   };
 
   function cloneItem(item) {
@@ -166,6 +167,12 @@
     },
     getPackingMessage() {
       return state.packingMessage;
+    },
+    setFailedFiles(files) {
+      state.failedFiles = Array.isArray(files) ? files : [];
+    },
+    getFailedFiles() {
+      return state.failedFiles || [];
     }
   };
 })();

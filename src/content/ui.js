@@ -186,6 +186,11 @@
       status.className = "github-packer-toolbar__status";
       status.dataset.role = "status";
 
+      const errors = document.createElement("div");
+      errors.className = "github-packer-toolbar__errors";
+      errors.dataset.role = "error-report";
+      errors.style.display = "none";
+
       left.appendChild(selectAllButton);
       left.appendChild(clearSelectionButton);
       left.appendChild(packButton);
@@ -195,6 +200,7 @@
       logo.alt = "GitHub Packer Logo";
 
       toolbar.appendChild(logo);
+      toolbar.appendChild(errors);
       toolbar.appendChild(status);
       toolbar.appendChild(left);
     }
@@ -234,6 +240,30 @@
     packButton.disabled = isPacking || !hasSelection;
     
     status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
+    
+    const errors = toolbar.querySelector('[data-role="error-report"]');
+    if (errors) {
+      const failedFiles = app.state.getFailedFiles();
+      if (!isPacking && failedFiles.length > 0) {
+        const threshold = 15;
+        const visibleFailed = failedFiles.slice(0, threshold);
+        const moreCount = failedFiles.length - threshold;
+        
+        let errorHtml = `<div style="color: var(--tp-error, #ff7b72); font-size: 12px; margin-bottom: 4px; line-height: 1.4;">`;
+        errorHtml += `<strong>部分檔案下載失敗：</strong><br/>`;
+        errorHtml += visibleFailed.map(f => `• ${f.split('/').pop()}`).join('<br/>');
+        if (moreCount > 0) {
+          errorHtml += `<br/>• ...以及另外 ${moreCount} 項`;
+        }
+        errorHtml += `</div>`;
+        
+        errors.innerHTML = errorHtml;
+        errors.style.display = "block";
+      } else {
+        errors.style.display = "none";
+        errors.innerHTML = "";
+      }
+    }
     
     const theme = getEffectiveTheme();
     const logo = toolbar.querySelector(".github-packer-toolbar__logo");
