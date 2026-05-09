@@ -1,12 +1,57 @@
 (async function initOptions() {
+  const app = window.GitHubPacker;
+  
+  // Initialize i18n
+  await app.i18n.init();
+  const t = app.i18n.t;
+
   const tokenInput = document.getElementById("github-token");
   const saveButton = document.getElementById("save-button");
   const clearButton = document.getElementById("clear-button");
   const toggleButton = document.getElementById("toggle-token");
   const statusMessage = document.getElementById("status-message");
+  const languageSelect = document.getElementById("language-select");
 
-  const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap round="stroke-linejoin="round" class="icon-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
   const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye-off"><path d="M9.88 9.88 3.59 3.59"/><path d="M2 12s3-7 10-7a9 9 0 0 1 8.39 5.35"/><path d="M22 12s-3 7-10 7a9 9 0 0 1-5.61-2.02"/><path d="m17 17-6.41-6.41"/><path d="m21.21 21.21-18.42-18.42"/><circle cx="12" cy="12" r="3"/></svg>`;
+
+  function translatePage() {
+    document.title = t("options.title");
+    document.getElementById("page-title").textContent = t("options.title");
+    document.getElementById("auth-title").textContent = t("options.authTitle");
+    document.getElementById("auth-desc").textContent = t("options.authDesc");
+    document.getElementById("token-label").textContent = t("options.tokenLabel");
+    document.getElementById("github-token").placeholder = t("options.tokenPlaceholder");
+    document.getElementById("toggle-token").title = t("options.toggleToken");
+    document.getElementById("save-button").textContent = t("options.save");
+    document.getElementById("clear-button").textContent = t("options.clear");
+    document.getElementById("general-title").textContent = t("options.generalTitle");
+    document.getElementById("language-label").textContent = t("options.languageLabel");
+    document.getElementById("info-title").textContent = t("options.infoTitle");
+    
+    // Info list
+    const info1 = document.getElementById("info-1");
+    info1.innerHTML = t("options.info1");
+    const info2 = document.getElementById("info-2");
+    info2.innerHTML = t("options.info2");
+    const info3 = document.getElementById("info-3");
+    const infoLink = document.getElementById("info-link");
+    info3.childNodes[0].textContent = t("options.info3");
+    infoLink.textContent = t("options.infoLink");
+
+    // Footer
+    const footerText = document.getElementById("footer-text");
+    footerText.childNodes[0].textContent = "© 2026 GitHub Packer. ";
+    
+    // Language options
+    const langOptions = languageSelect.options;
+    for (let i = 0; i < langOptions.length; i++) {
+      const val = langOptions[i].value;
+      langOptions[i].textContent = t(`options.languages.${val}`);
+    }
+  }
+
+  translatePage();
 
   toggleButton.addEventListener("click", () => {
     const isPassword = tokenInput.type === "password";
@@ -14,10 +59,17 @@
     toggleButton.innerHTML = isPassword ? eyeOffIcon : eyeIcon;
   });
 
-  // Load existing token
-  const existingToken = await window.GitHubPacker.auth.getToken();
+  // Load existing settings
+  const [existingToken, existingLang] = await Promise.all([
+    app.auth.getToken(),
+    app.auth.getLanguagePreference()
+  ]);
+
   if (existingToken) {
     tokenInput.value = existingToken;
+  }
+  if (existingLang) {
+    languageSelect.value = existingLang;
   }
 
   function showStatus(message, type) {
@@ -28,37 +80,42 @@
       setTimeout(() => {
         statusMessage.textContent = "";
         statusMessage.className = "status-message";
-      }, 3000);
+      }, 5000);
     }
   }
 
   saveButton.addEventListener("click", async () => {
     const token = tokenInput.value.trim();
-
-    if (!token) {
-      showStatus("請輸入 Token", "error");
-      return;
-    }
-
-    if (!window.GitHubPacker.auth.isValidTokenFormat(token)) {
-      showStatus("Token 格式看起來不正確 (應為 ghp_ 或 github_pat_ 開頭)", "error");
-      // Continue anyway as formats might change, but warn the user
-    }
+    const lang = languageSelect.value;
 
     try {
-      await window.GitHubPacker.auth.setToken(token);
-      showStatus("設定已成功儲存！", "success");
+      await Promise.all([
+        app.auth.setToken(token || null),
+        app.auth.setLanguagePreference(lang)
+      ]);
+      
+      const savedMsg = t("options.saved");
+      const refreshNotice = t("options.refreshNotice");
+      showStatus(`${savedMsg} ${refreshNotice}`, "success");
+      
+      // Update page language immediately if changed
+      await app.i18n.init();
+      translatePage();
     } catch (error) {
-      showStatus("儲存失敗，請重試", "error");
+      showStatus(t("ui.errorOccurred") + " " + error.message, "error");
       console.error(error);
     }
   });
 
   clearButton.addEventListener("click", async () => {
-    if (confirm("確定要清除儲存的 Token 嗎？這將導致無法下載私有儲存庫。")) {
-      await window.GitHubPacker.auth.setToken(null);
+    const confirmMsg = app.i18n.getLanguage() === "zh_TW" 
+      ? "確定要清除儲存的 Token 嗎？這將導致無法下載私有儲存庫。"
+      : "Are you sure you want to clear the saved token? This will prevent downloading private repositories.";
+      
+    if (confirm(confirmMsg)) {
+      await app.auth.setToken(null);
       tokenInput.value = "";
-      showStatus("Token 已清除", "success");
+      showStatus(t("options.clear") + " OK", "success");
     }
   });
 })();

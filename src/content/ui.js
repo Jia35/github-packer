@@ -36,7 +36,7 @@
     }
 
     const iconMarkup = isPacking ? ICONS.cancel : ICONS.download;
-    const labelText = isPacking ? constants.labels.cancel : constants.labels.pack;
+    const labelText = isPacking ? app.i18n.t('labels.cancel') : app.i18n.t('labels.pack');
     
     const icon = createIconFragment(iconMarkup);
     const label = document.createElement("span");
@@ -70,9 +70,9 @@
 
     if (lastError && (lastError.status === 401 || lastError.status === 404)) {
       const strong = document.createElement("strong");
-      strong.textContent = "權限不足：";
+      strong.textContent = app.i18n.t('ui.permissionDenied');
       container.appendChild(strong);
-      container.appendChild(document.createTextNode(" 此為私有倉庫或 Token 已過期。"));
+      container.appendChild(document.createTextNode(app.i18n.t('ui.tokenExpired')));
       container.appendChild(document.createElement("br"));
 
       const settingsLink = document.createElement("a");
@@ -80,7 +80,7 @@
       settingsLink.dataset.action = "open-settings";
       settingsLink.style.color = "#58a6ff";
       settingsLink.style.textDecoration = "underline";
-      settingsLink.textContent = "前往設定 GitHub Token";
+      settingsLink.textContent = app.i18n.t('ui.goToSettings');
       settingsLink.addEventListener("click", (e) => {
         e.preventDefault();
         openOptionsPage();
@@ -93,7 +93,7 @@
       const isAborted = app.state.isAborted();
 
       const strong = document.createElement("strong");
-      strong.textContent = isAborted ? "尚未下載的檔案清單：" : "部分檔案下載失敗：";
+      strong.textContent = isAborted ? app.i18n.t('ui.abortedDownload') : app.i18n.t('ui.failedDownload');
       container.appendChild(strong);
       container.appendChild(document.createElement("br"));
 
@@ -103,15 +103,15 @@
       });
 
       if (moreCount > 0) {
-        container.appendChild(document.createTextNode(`• ...以及另外 ${moreCount} 項`));
+        container.appendChild(document.createTextNode(app.i18n.t('ui.moreItems', {count: moreCount})));
       } else if (container.lastChild?.nodeName === "BR") {
         container.removeChild(container.lastChild);
       }
     } else if (lastError) {
       const strong = document.createElement("strong");
-      strong.textContent = "發生錯誤：";
+      strong.textContent = app.i18n.t('ui.errorOccurred');
       container.appendChild(strong);
-      container.appendChild(document.createTextNode(` ${lastError.message || "打包下載失敗"}`));
+      container.appendChild(document.createTextNode(` ${lastError.message || app.i18n.t('labels.pack')}`));
     }
 
     errors.style.display = "block";
@@ -121,7 +121,7 @@
   function createCheckbox(item) {
     const wrapper = document.createElement("label");
     wrapper.className = "github-packer-checkbox";
-    wrapper.title = item.kind === "directory" ? "選取資料夾" : "選取檔案";
+    wrapper.title = item.kind === "directory" ? app.i18n.t('ui.selectFolder') : app.i18n.t('ui.selectFile');
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -227,10 +227,10 @@
 
   function getToolbarText(itemCount) {
     if (itemCount <= 0) {
-      return constants.messages.idle;
+      return app.i18n.t('messages.idle');
     }
 
-    return `已選取 ${itemCount} 項`;
+    return app.i18n.t('ui.selectedItems', {count: itemCount});
   }
 
   function syncSelectionVisibility() {
@@ -346,15 +346,15 @@
     const hasSelection = selectedCount > 0;
 
     toggleAllButton.textContent = allVisibleSelected
-      ? constants.labels.clearAll
-      : constants.labels.selectAll;
+      ? app.i18n.t('labels.clearAll')
+      : app.i18n.t('labels.selectAll');
     toggleAllButton.disabled = isPacking || items.length === 0;
-    clearSelectionButton.textContent = constants.labels.clearSelection;
+    clearSelectionButton.textContent = app.i18n.t('labels.clearSelection');
     clearSelectionButton.disabled = isPacking || !hasSelection;
     updatePackButtonContent(packButton, isPacking);
     packButton.disabled = !hasSelection; // Packing 狀態時不再禁用，因為要處理點擊中止
     
-    status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
+    status.textContent = isPacking ? packingMessage || app.i18n.t('messages.resolvingBranch') : getToolbarText(selectedCount);
     
     const errors = toolbar.querySelector('[data-role="error-report"]');
     if (errors) {
@@ -420,13 +420,13 @@
     const notices = [];
 
     if (result.truncated) {
-      notices.push("這個儲存庫的檔案樹回傳結果被 GitHub 截斷，部分深層檔案可能未被包含。");
+      notices.push(app.i18n.t('ui.truncatedNotice'));
     }
 
     if (result.missing && result.missing.length) {
       const preview = result.missing.slice(0, 6).join("\n");
-      const suffix = result.missing.length > 6 ? `\n...以及另外 ${result.missing.length - 6} 項` : "";
-      notices.push(`部分項目在目前分支中找不到，已略過：\n${preview}${suffix}`);
+      const suffix = result.missing.length > 6 ? app.i18n.t('ui.moreItems', {count: result.missing.length - 6}) : "";
+      notices.push(app.i18n.t('ui.missingItemsNotice', {preview, suffix}));
     }
 
     if (notices.length) {

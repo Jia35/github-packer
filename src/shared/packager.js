@@ -63,7 +63,7 @@
         detail = "";
       }
 
-      const error = new Error(`GitHub API 請求失敗：${response.status}${detail}`);
+      const error = new Error(app.i18n.t('messages.apiFailed', {status: response.status, detail}));
       error.status = response.status;
       throw error;
     }
@@ -94,7 +94,7 @@
     );
 
     if (!Array.isArray(tree.tree)) {
-      throw new Error("無法取得儲存庫檔案樹");
+      throw new Error(app.i18n.t('messages.noTree'));
     }
 
     const result = {
@@ -121,7 +121,7 @@
     }
 
     const preview = paths.slice(0, 5).join(", ");
-    const suffix = paths.length > 5 ? ` ...還有 ${paths.length - 5} 項` : "";
+    const suffix = paths.length > 5 ? app.i18n.t('ui.moreItems', {count: paths.length - 5}) : "";
     return `${preview}${suffix}`;
   }
 
@@ -150,7 +150,7 @@
     });
 
     if (!response.ok) {
-      const error = new Error(`下載檔案失敗: ${path}`);
+      const error = new Error(`${app.i18n.t('ui.failedDownload')} ${path}`);
       error.status = response.status;
       throw error;
     }
@@ -321,34 +321,34 @@
     context.signal = signal; // Propagate signal via context for simplicity in inner calls
 
     if (!context || !context.owner || !context.repo) {
-      throw new Error("找不到目前的 GitHub 儲存庫資訊");
+      throw new Error(app.i18n.t('messages.noRepoContext'));
     }
 
-    updateProgress(onProgress, constants.messages.resolvingBranch);
+    updateProgress(onProgress, app.i18n.t('messages.resolvingBranch'));
     const branch = await resolveBranch(context);
 
     if (!branch) {
-      throw new Error("無法判斷目前分支");
+      throw new Error(app.i18n.t('messages.noBranch'));
     }
 
-    updateProgress(onProgress, constants.messages.loadingTree);
+    updateProgress(onProgress, app.i18n.t('messages.loadingTree'));
     const tree = await fetchRepositoryTree(context, branch);
 
-    updateProgress(onProgress, constants.messages.matchingFiles);
+    updateProgress(onProgress, app.i18n.t('messages.matchingFiles'));
     const matched = resolveFilesFromSelection(tree.files, isSelectedPredicate);
 
     if (!matched.files.length) {
-      throw new Error(`找不到可下載的檔案：${formatMissingPreview(matched.missing)}`);
+      throw new Error(app.i18n.t('messages.noFilesToDownload', {preview: formatMissingPreview(matched.missing)}));
     }
 
-    updateProgress(onProgress, constants.messages.downloadingFiles, `0 / ${matched.files.length}`);
+    updateProgress(onProgress, app.i18n.t('messages.downloadingFiles'), `0 / ${matched.files.length}`);
     const downloadedFiles = (await mapWithConcurrency(matched.files, 4, async (file, index) => {
       try {
         const bytes = await fetchFileContent(context, branch, file.path);
 
         updateProgress(
           onProgress,
-          constants.messages.downloadingFiles,
+          app.i18n.t('messages.downloadingFiles'),
           `${index + 1} / ${matched.files.length}`
         );
 
@@ -376,14 +376,14 @@
 
     if (!downloadedFiles.length) {
       if (isAborted) {
-        const error = new Error("下載已中止");
+        const error = new Error(app.i18n.t('messages.downloadAborted'));
         error.name = "AbortError";
         throw error;
       }
-      throw new Error("所有檔案均下載失敗，請檢查網路連線或 GitHub 狀態。");
+      throw new Error(app.i18n.t('messages.allDownloadsFailed'));
     }
 
-    updateProgress(onProgress, constants.messages.buildingArchive);
+    updateProgress(onProgress, app.i18n.t('messages.buildingArchive'));
     const blob = buildZipBlob(downloadedFiles);
     triggerDownload(blob, createArchiveName(context, branch));
 

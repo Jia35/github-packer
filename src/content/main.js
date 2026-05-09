@@ -106,7 +106,7 @@
 
   function updateBeforeUnloadGuard() {
     if (app.state.isPacking()) {
-      window.onbeforeunload = () => "正在打包下載中，確定要離開嗎？";
+      window.onbeforeunload = () => app.i18n.t('labels.cancel'); // Or a custom message if needed
       return;
     }
 
@@ -171,9 +171,9 @@
       app.state.setAborted(result.aborted || false);
       
       if (result.aborted) {
-        app.state.setPackingMessage("已中止下載 (部分完成)");
+        app.state.setPackingMessage(app.i18n.t('ui.abortedDownload').replace('：', ''));
       } else {
-        app.state.setPackingMessage(constants.messages.completed);
+        app.state.setPackingMessage(app.i18n.t('messages.completed'));
       }
       
       refresh();
@@ -181,7 +181,7 @@
     } catch (error) {
       if (error.name === "AbortError") {
         console.log("[GitHub Packer] packing cancelled before any downloads");
-        app.state.setPackingMessage("已中止下載");
+        app.state.setPackingMessage(app.i18n.t('labels.cancel'));
         app.state.setFailedFiles([]); // 尚未開始就中止，不顯示清單
       } else {
         console.error("[GitHub Packer] pack failed", error);
@@ -315,7 +315,8 @@
     };
   }
 
-  function start() {
+  async function start() {
+    await app.i18n.init();
     patchHistoryMethod("pushState");
     patchHistoryMethod("replaceState");
     window.addEventListener("popstate", scheduleRender);
