@@ -6,6 +6,8 @@
   let currentUrl = window.location.href;
   let observer = null;
   let contextAlive = true;
+  let suppressMutationHandling = false;
+  let suppressMutationTimer = null;
 
   function isExtensionAlive() {
     if (!contextAlive) return false;
@@ -30,8 +32,76 @@
       window.clearTimeout(renderTimer);
       renderTimer = null;
     }
+    if (suppressMutationTimer !== null) {
+      window.clearTimeout(suppressMutationTimer);
+      suppressMutationTimer = null;
+    }
     const toolbar = document.getElementById(constants.toolbarId);
     if (toolbar) toolbar.remove();
+  }
+
+  function suppressOwnMutations() {
+    suppressMutationHandling = true;
+    if (suppressMutationTimer !== null) {
+      window.clearTimeout(suppressMutationTimer);
+    }
+
+    suppressMutationTimer = window.setTimeout(() => {
+      suppressMutationHandling = false;
+      suppressMutationTimer = null;
+    }, constants.renderDebounceMs * 2);
+  }
+
+  function isManagedNode(node) {
+    if (!(node instanceof Element)) {
+      return false;
+    }
+
+    if (node.id === constants.toolbarId || node.closest(`#${constants.toolbarId}`)) {
+      return true;
+    }
+
+    if (
+      node.hasAttribute(constants.toolbarMarker) ||
+      node.hasAttribute(constants.checkboxMarker) ||
+      node.hasAttribute(constants.spacerMarker) ||
+      node.hasAttribute(constants.targetMarker) ||
+      node.hasAttribute(constants.rowMarker)
+    ) {
+      return true;
+    }
+
+    return Boolean(
+      node.closest(
+        `[${constants.toolbarMarker}],` +
+          `[${constants.checkboxMarker}],` +
+          `[${constants.spacerMarker}],` +
+          `[${constants.targetMarker}],` +
+          `[${constants.rowMarker}]`
+      )
+    );
+  }
+
+  function shouldHandleMutations(mutations) {
+    for (const mutation of mutations) {
+      if (!isManagedNode(mutation.target)) {
+        return true;
+      }
+
+      for (const node of mutation.addedNodes) {
+        if (!isManagedNode(node)) {
+          return true;
+        }
+      }
+
+      for (const node of mutation.removedNodes) {
+        if (!isManagedNode(node)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   function updateBeforeUnloadGuard() {
@@ -123,6 +193,7 @@
       return;
     }
     renderTimer = null;
+    suppressOwnMutations();
 
     if (!app.github.isSupportedRepositoryPage()) {
       const existingToolbar = document.getElementById(constants.toolbarId);
@@ -179,6 +250,8 @@
   }
 
   function handleMutations() {
+    const mutations = Array.from(arguments[0] || []);
+
     if (!isExtensionAlive()) {
       teardown();
       return;
@@ -186,6 +259,16 @@
 
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
+      scheduleRender();
+      return;
+    }
+
+    if (suppressMutationHandling) {
+      return;
+    }
+
+    if (!shouldHandleMutations(mutations)) {
+      return;
     }
 
     scheduleRender();

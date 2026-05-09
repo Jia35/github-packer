@@ -7,6 +7,107 @@
     spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="github-packer-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`
   };
 
+  function setNodeChildren(node, children) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+
+    children.forEach((child) => {
+      node.appendChild(child);
+    });
+  }
+
+  function createIconFragment(svgMarkup) {
+    const template = document.createElement("template");
+    template.innerHTML = svgMarkup.trim();
+    return template.content.firstElementChild;
+  }
+
+  function updatePackButtonContent(button, isPacking) {
+    if (!button) {
+      return;
+    }
+
+    const currentMode = button.dataset.mode;
+    const nextMode = isPacking ? "packing" : "idle";
+    if (currentMode === nextMode) {
+      return;
+    }
+
+    const icon = createIconFragment(isPacking ? ICONS.spinner : ICONS.download);
+    const label = document.createElement("span");
+    label.textContent = isPacking ? constants.labels.preparing : constants.labels.pack;
+
+    setNodeChildren(button, [icon, label]);
+    button.dataset.mode = nextMode;
+  }
+
+  function renderToolbarErrors(errors, failedFiles, lastError) {
+    if (!errors) {
+      return;
+    }
+
+    if (!failedFiles.length && !lastError) {
+      errors.style.display = "none";
+      errors.replaceChildren();
+      return;
+    }
+
+    const container = document.createElement("div");
+    container.style.color = "var(--tp-error, #ff7b72)";
+    container.style.fontSize = "13px";
+    container.style.marginBottom = "4px";
+    container.style.lineHeight = "1.4";
+
+    if (lastError && (lastError.status === 401 || lastError.status === 404)) {
+      const strong = document.createElement("strong");
+      strong.textContent = "權限不足：";
+      container.appendChild(strong);
+      container.appendChild(document.createTextNode(" 此為私有倉庫或 Token 已過期。"));
+      container.appendChild(document.createElement("br"));
+
+      const settingsLink = document.createElement("a");
+      settingsLink.href = "#";
+      settingsLink.dataset.action = "open-settings";
+      settingsLink.style.color = "#58a6ff";
+      settingsLink.style.textDecoration = "underline";
+      settingsLink.textContent = "前往設定 GitHub Token";
+      settingsLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        openOptionsPage();
+      });
+      container.appendChild(settingsLink);
+    } else if (failedFiles.length > 0) {
+      const threshold = 15;
+      const visibleFailed = failedFiles.slice(0, threshold);
+      const moreCount = failedFiles.length - threshold;
+
+      const strong = document.createElement("strong");
+      strong.textContent = "部分檔案下載失敗：";
+      container.appendChild(strong);
+      container.appendChild(document.createElement("br"));
+
+      visibleFailed.forEach((file) => {
+        container.appendChild(document.createTextNode(`• ${file.split("/").pop()}`));
+        container.appendChild(document.createElement("br"));
+      });
+
+      if (moreCount > 0) {
+        container.appendChild(document.createTextNode(`• ...以及另外 ${moreCount} 項`));
+      } else if (container.lastChild?.nodeName === "BR") {
+        container.removeChild(container.lastChild);
+      }
+    } else if (lastError) {
+      const strong = document.createElement("strong");
+      strong.textContent = "發生錯誤：";
+      container.appendChild(strong);
+      container.appendChild(document.createTextNode(` ${lastError.message || "打包下載失敗"}`));
+    }
+
+    errors.style.display = "block";
+    errors.replaceChildren(container);
+  }
+
   function createCheckbox(item) {
     const wrapper = document.createElement("label");
     wrapper.className = "github-packer-checkbox";
@@ -186,6 +287,7 @@
       packButton.className = "github-packer-button github-packer-button--primary";
       packButton.dataset.action = "pack";
       packButton.addEventListener("click", handlers.onPack);
+      updatePackButtonContent(packButton, false);
 
       const status = document.createElement("p");
       status.className = "github-packer-toolbar__status";
@@ -239,9 +341,7 @@
     toggleAllButton.disabled = isPacking || items.length === 0;
     clearSelectionButton.textContent = constants.labels.clearSelection;
     clearSelectionButton.disabled = isPacking || !hasSelection;
-    const label = isPacking ? constants.labels.preparing : constants.labels.pack;
-    const icon = isPacking ? ICONS.spinner : ICONS.download;
-    packButton.innerHTML = `${icon}<span>${label}</span>`;
+    updatePackButtonContent(packButton, isPacking);
     packButton.disabled = isPacking || !hasSelection;
     
     status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
@@ -249,42 +349,13 @@
     const errors = toolbar.querySelector('[data-role="error-report"]');
     if (errors) {
       const failedFiles = app.state.getFailedFiles();
-      const lastError = app.state.getLastError(); // Need to add this to state.js
-      
-      if (!isPacking && (failedFiles.length > 0 || lastError)) {
-        let errorHtml = `<div style="color: var(--tp-error, #ff7b72); font-size: 13px; margin-bottom: 4px; line-height: 1.4;">`;
-        
-        if (lastError && (lastError.status === 401 || lastError.status === 404)) {
-          errorHtml += `<strong>權限不足：</strong> 此為私有倉庫或 Token 已過期。<br/>`;
-          errorHtml += `<a href="#" data-action="open-settings" style="color: #58a6ff; text-decoration: underline;">前往設定 GitHub Token</a>`;
-        } else if (failedFiles.length > 0) {
-          const threshold = 15;
-          const visibleFailed = failedFiles.slice(0, threshold);
-          const moreCount = failedFiles.length - threshold;
-          
-          errorHtml += `<strong>部分檔案下載失敗：</strong><br/>`;
-          errorHtml += visibleFailed.map(f => `• ${f.split('/').pop()}`).join('<br/>');
-          if (moreCount > 0) {
-            errorHtml += `<br/>• ...以及另外 ${moreCount} 項`;
-          }
-        } else if (lastError) {
-          errorHtml += `<strong>發生錯誤：</strong> ${lastError.message || "打包下載失敗"}`;
-        }
-        errorHtml += `</div>`;
-        
-        errors.innerHTML = errorHtml;
-        errors.style.display = "block";
+      const lastError = app.state.getLastError();
 
-        const settingsLink = errors.querySelector('[data-action="open-settings"]');
-        if (settingsLink) {
-          settingsLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            openOptionsPage();
-          });
-        }
+      if (!isPacking && (failedFiles.length > 0 || lastError)) {
+        renderToolbarErrors(errors, failedFiles, lastError);
       } else {
         errors.style.display = "none";
-        errors.innerHTML = "";
+        errors.replaceChildren();
       }
     }
     
