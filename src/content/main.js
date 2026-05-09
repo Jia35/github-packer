@@ -98,7 +98,6 @@
     } catch (error) {
       console.error("[GitHub Packer] pack failed", error);
       app.state.setLastError(error);
-      app.ui.showPackError(error);
     } finally {
       window.setTimeout(() => {
         app.state.setPacking(false);

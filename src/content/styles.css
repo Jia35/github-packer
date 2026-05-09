@@ -12,11 +12,7 @@
     0 10px 30px rgba(0, 0, 0, 0.2),
     0 20px 60px rgba(0, 0, 0, 0.3);
 
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 12px;
+  display: block;
   position: fixed;
   right: 24px;
   bottom: 24px;
@@ -95,9 +91,9 @@
 }
 
 .github-packer-toolbar__logo {
-  position: absolute;
-  top: 16px;
-  right: 24px;
+  float: right;
+  margin-left: 12px;
+  margin-bottom: 4px;
   width: 22px;
   height: 22px;
   object-fit: contain;
@@ -111,6 +107,10 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  clear: both;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tp-border);
 }
 
 /* 旋轉動畫 */
@@ -134,8 +134,8 @@
 }
 
 .github-packer-toolbar__errors {
-  margin-bottom: 8px;
-  max-height: 200px;
+  margin-bottom: 12px;
+  max-height: 160px;
   overflow-y: auto;
   border-left: 2px solid var(--tp-error);
   padding-left: 8px;
