@@ -17,10 +17,13 @@
     renderDebounceMs: 120,
     selectors: {
       rootMain: "main",
+      fileTreeRoot: "#repos-file-tree",
+      fileTreeItems: '#repos-file-tree li[role="treeitem"]',
+      breadcrumbs: '[data-testid="breadcrumbs"]',
       repositoryNameMeta: 'meta[name="octolytics-dimension-repository_nwo"]',
       branchFeedLink: 'link[rel="alternate"][type="application/atom+xml"][href*="/commits/"]',
       fileLinks:
-        'main a[href*="/blob/"], main a[href*="/tree/"]',
+        'a[href*="/blob/"], a[href*="/tree/"]',
       rowContainers: [
         '[role="row"]',
         "tr",

@@ -50,7 +50,7 @@
       return;
     }
 
-    const target = item.mountTarget || item.link.parentElement;
+    const target = item.mountTarget || (item.link ? item.link.parentElement : null);
 
     if (!target) {
       return;
@@ -64,7 +64,7 @@
 
     target.classList.add("github-packer-inline-target");
 
-    if (item.link.parentNode === target) {
+    if (item.link && item.link.parentNode === target) {
       item.link.before(wrapper);
     } else if (typeof target.prepend === "function") {
       target.prepend(wrapper);

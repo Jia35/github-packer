@@ -156,6 +156,33 @@
     };
   }
 
+  function parseItemFromTreeRow(row) {
+    if (!row) {
+      return null;
+    }
+
+    const rawId = row.getAttribute("id") || "";
+    const path = rawId.endsWith("-item") ? rawId.slice(0, -"-item".length) : rawId;
+
+    if (!path) {
+      return null;
+    }
+
+    const label =
+      row.querySelector(".prc-TreeView-TreeViewItemContentText-FFaKp span:last-child") ||
+      row.querySelector('[class*="TreeViewItemContentText"] span:last-child') ||
+      row.querySelector('[class*="TreeViewItemContentText"]') ||
+      row.querySelector('[aria-labelledby]');
+    const name = label ? label.textContent.trim() : path.split("/").pop() || "";
+    const hasExpandToggle = row.hasAttribute("aria-expanded");
+
+    return {
+      path,
+      kind: hasExpandToggle ? "directory" : "file",
+      name
+    };
+  }
+
   function getCandidateRows(link) {
     return constants.selectors.rowContainers
       .map((selector) => link.closest(selector))
@@ -178,6 +205,7 @@
     return (
       link.closest("td") ||
       link.closest('[role="gridcell"]') ||
+      link.closest("li") ||
       link.parentElement ||
       null
     );
@@ -185,7 +213,15 @@
 
   function getMountTarget(row, link) {
     if (!row) {
-      return link.parentElement || null;
+      return link ? link.parentElement || null : null;
+    }
+
+    const treeContent =
+      row.querySelector(".prc-TreeView-TreeViewItemContent-RKsCI") ||
+      row.querySelector('[class*="TreeViewItemContent"]');
+
+    if (treeContent) {
+      return treeContent;
     }
 
     if (row.tagName === "TR") {
@@ -224,6 +260,22 @@
     return heading ? heading.textContent.trim().toLowerCase() === "parent directory" : false;
   }
 
+  function isBreadcrumbLink(link) {
+    return Boolean(link && link.closest(constants.selectors.breadcrumbs));
+  }
+
+  function isSidebarTreeLink(link) {
+    if (!link) {
+      return false;
+    }
+
+    return Boolean(
+      link.closest(constants.selectors.fileTreeRoot) ||
+      link.closest('[data-testid*="file-tree"]') ||
+      link.closest('[aria-controls="repos-file-tree"]')
+    );
+  }
+
   function findRepositoryItems(context) {
     if (!context) {
       return [];
@@ -231,6 +283,17 @@
 
     const prefix = `/${context.owner}/${context.repo}/`;
     const rows = new Map();
+    const registerItem = (row, item) => {
+      if (!row || !item || !item.path) {
+        return;
+      }
+
+      const existing = rows.get(row);
+
+      if (!existing || item.path.length < existing.path.length) {
+        rows.set(row, item);
+      }
+    };
 
     document.querySelectorAll(constants.selectors.fileLinks).forEach((link) => {
       const href = link.getAttribute("href");
@@ -250,12 +313,22 @@
         return;
       }
 
+      if (isBreadcrumbLink(link)) {
+        return;
+      }
+
       if (row.closest("#readme")) {
         return;
       }
 
-      const existing = rows.get(row);
-      const item = {
+      const inMainContent = Boolean(link.closest(constants.selectors.rootMain));
+      const inSidebarTree = isSidebarTreeLink(link);
+
+      if (!inMainContent && !inSidebarTree) {
+        return;
+      }
+
+      registerItem(row, {
         element: row,
         link,
         mountTarget: getMountTarget(row, link),
@@ -263,11 +336,29 @@
         name: link.textContent.trim() || parsed.path.split("/").pop() || "",
         path: parsed.path,
         kind: parsed.kind
-      };
+      });
+    });
 
-      if (!existing || item.path.length < existing.path.length) {
-        rows.set(row, item);
+    document.querySelectorAll(constants.selectors.fileTreeItems).forEach((row) => {
+      if (!row.closest(constants.selectors.fileTreeRoot)) {
+        return;
       }
+
+      const parsed = parseItemFromTreeRow(row);
+
+      if (!parsed) {
+        return;
+      }
+
+      registerItem(row, {
+        element: row,
+        link: null,
+        mountTarget: getMountTarget(row, null),
+        href: "",
+        name: parsed.name,
+        path: parsed.path,
+        kind: parsed.kind
+      });
     });
 
     return Array.from(rows.values()).sort((left, right) => {
