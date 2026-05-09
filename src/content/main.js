@@ -5,6 +5,34 @@
   let renderTimer = null;
   let currentUrl = window.location.href;
   let observer = null;
+  let contextAlive = true;
+
+  function isExtensionAlive() {
+    if (!contextAlive) return false;
+    return isContextValid();
+  }
+
+  function isContextValid() {
+    try {
+      return typeof chrome !== "undefined" && !!chrome.runtime && !!chrome.runtime.id;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function teardown() {
+    contextAlive = false;
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    if (renderTimer !== null) {
+      window.clearTimeout(renderTimer);
+      renderTimer = null;
+    }
+    const toolbar = document.getElementById(constants.toolbarId);
+    if (toolbar) toolbar.remove();
+  }
 
   function updateBeforeUnloadGuard() {
     if (app.state.isPacking()) {
@@ -77,12 +105,20 @@
   }
 
   function refresh() {
+    if (!isExtensionAlive()) {
+      teardown();
+      return;
+    }
     const items = app.state.getVisibleItems();
     const toolbar = document.getElementById(constants.toolbarId);
     refreshToolbar(items, toolbar);
   }
 
   function render() {
+    if (!isExtensionAlive()) {
+      teardown();
+      return;
+    }
     renderTimer = null;
 
     if (!app.github.isSupportedRepositoryPage()) {
@@ -128,6 +164,10 @@
   }
 
   function scheduleRender() {
+    if (!isExtensionAlive()) {
+      teardown();
+      return;
+    }
     if (renderTimer !== null) {
       window.clearTimeout(renderTimer);
     }
@@ -136,6 +176,11 @@
   }
 
   function handleMutations() {
+    if (!isExtensionAlive()) {
+      teardown();
+      return;
+    }
+
     if (window.location.href !== currentUrl) {
       currentUrl = window.location.href;
     }

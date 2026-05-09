@@ -24,6 +24,31 @@
     return { wrapper, checkbox };
   }
 
+  function getEffectiveTheme() {
+    const mode = document.documentElement.dataset.colorMode;
+    if (mode === "dark") return "dark";
+    if (mode === "light") return "light";
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
+    return "light";
+  }
+
+  function isContextValid() {
+    try {
+      return typeof chrome !== "undefined" && !!chrome.runtime && !!chrome.runtime.id;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function getAssetUrl(path) {
+    if (!isContextValid()) return "";
+    try {
+      return chrome.runtime.getURL(path);
+    } catch (e) {
+      return "";
+    }
+  }
+
   function markRowSelection(row, isSelected) {
     row.classList.toggle(constants.selectedClassName, isSelected);
   }
@@ -164,6 +189,12 @@
       left.appendChild(selectAllButton);
       left.appendChild(clearSelectionButton);
       left.appendChild(packButton);
+
+      const logo = document.createElement("img");
+      logo.className = "github-packer-toolbar__logo";
+      logo.alt = "GitHub Packer Logo";
+
+      toolbar.appendChild(logo);
       toolbar.appendChild(status);
       toolbar.appendChild(left);
     }
@@ -203,6 +234,24 @@
     packButton.disabled = isPacking || !hasSelection;
     
     status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
+    
+    const theme = getEffectiveTheme();
+    const logo = toolbar.querySelector(".github-packer-toolbar__logo");
+    if (logo) {
+      // 根據 GitHub 主題決定 Logo (注意：Toolbar 目前採反差色設計)
+      // GitHub 淺色 (theme=light) -> Toolbar 深色 -> 使用白色 Logo (logo_32_w)
+      // GitHub 深色 (theme=dark) -> Toolbar 淺色 -> 使用黑色 Logo (logo_32_b)
+      const logoFile = theme === "dark" ? "icons/logo_32_b.png" : "icons/logo_32_w.png";
+      const logoUrl = getAssetUrl(logoFile);
+      
+      if (logoUrl) {
+        logo.src = logoUrl;
+        logo.style.display = "";
+      } else {
+        logo.style.display = "none";
+      }
+    }
+
     toolbar.classList.toggle(constants.loadingClassName, isPacking);
     toolbar.classList.toggle("github-packer-toolbar--visible", hasSelection || isPacking);
     syncSelectionVisibility();

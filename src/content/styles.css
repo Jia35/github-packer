@@ -83,7 +83,7 @@
   pointer-events: auto;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 575px) {
   #github-packer-toolbar {
     right: 16px;
     bottom: 16px;
@@ -91,6 +91,18 @@
     max-width: none;
   }
 }
+
+.github-packer-toolbar__logo {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
 
 .github-packer-toolbar__group {
   display: flex;
@@ -175,9 +187,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  min-width: 16px;
-  height: 16px;
+  width: 14px;
+  min-width: 14px;
+  height: 14px;
   margin-right: 8px; /* 預設維持間距（如中間檔案清單） */
   vertical-align: middle;
   flex: 0 0 auto;
@@ -235,8 +247,8 @@ html:not(.github-packer-has-selection) [data-github-packer-row="true"]:hover [da
 }
 
 .github-packer-checkbox__input {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   margin: 0;
   cursor: pointer;
 }
