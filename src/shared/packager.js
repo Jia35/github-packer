@@ -1,6 +1,7 @@
 (function bootstrapPackager() {
   const app = (window.GitHubPacker = window.GitHubPacker || {});
   const constants = app.constants;
+  const treeCache = new Map();
 
   const CRC_TABLE = (() => {
     const table = new Uint32Array(256);
@@ -80,6 +81,12 @@
   }
 
   async function fetchRepositoryTree(context, branch) {
+    const cacheKey = `${context.owner}/${context.repo}:${branch}`;
+    if (treeCache.has(cacheKey)) {
+      console.log(`[GitHub Packer] Using cached tree for ${cacheKey}`);
+      return treeCache.get(cacheKey);
+    }
+
     const encodedRef = encodeURIComponent(branch);
     const tree = await fetchJson(
       createApiUrl(`/repos/${context.owner}/${context.repo}/git/trees/${encodedRef}?recursive=1`),
@@ -90,10 +97,13 @@
       throw new Error("無法取得儲存庫檔案樹");
     }
 
-    return {
+    const result = {
       truncated: Boolean(tree.truncated),
       files: tree.tree.filter((entry) => entry && entry.type === "blob" && entry.path)
     };
+
+    treeCache.set(cacheKey, result);
+    return result;
   }
 
   function resolveFilesFromSelection(repositoryFiles, isSelectedPredicate) {
