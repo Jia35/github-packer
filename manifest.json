@@ -18,8 +18,16 @@
     }
   },
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
   "host_permissions": [
     "https://github.com/*",
     "https://api.github.com/*",
@@ -32,6 +40,7 @@
       ],
       "js": [
         "src/shared/constants.js",
+        "src/shared/auth.js",
         "src/shared/state.js",
         "src/shared/github.js",
         "src/shared/packager.js",

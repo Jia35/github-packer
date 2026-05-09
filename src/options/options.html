@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Packer 設定</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="../../icons/logo_48.png" alt="Logo" class="logo">
+            <h1>GitHub Packer 設定</h1>
+        </header>
+
+        <main class="content">
+            <section class="settings-section">
+                <h2>GitHub 認證設定</h2>
+                <p class="description">
+                    設定 Personal Access Token (PAT) 以支援下載私有儲存庫的內容。
+                </p>
+
+                <div class="form-group">
+                    <label for="github-token">GitHub Personal Access Token</label>
+                    <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx" spellcheck="false">
+                    <div id="status-message" class="status-message"></div>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 設定提示</h3>
+                    <ul>
+                        <li>必要權限 (Fine-grained)：Repository access 選擇 <strong>All repositories</strong>，Permissions 僅需勾選 <strong>Contents</strong> (Read-only) 即可。</li>
+                        <li>隱私說明：此 Token 僅會儲存在您本地瀏覽器的 <code>chrome.storage</code> 中，不會傳送至任何第三方伺服器。</li>
+                        <li>GitHub 官方文件：<a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noopener noreferrer">如何建立 GitHub PAT？</a></li>
+                    </ul>
+                </div>
+
+                <div class="actions">
+                    <button id="save-button" class="button button--primary">儲存設定</button>
+                    <button id="clear-button" class="button button--secondary">清除 Token</button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 GitHub Packer. 讓開發更簡單。</p>
+        </footer>
+    </div>
+    <script src="../shared/auth.js"></script>
+    <script src="options.js"></script>
+</body>
+</html>

@@ -49,6 +49,11 @@
     }
   }
 
+  function openOptionsPage() {
+    if (!isContextValid()) return;
+    chrome.runtime.sendMessage({ action: "openOptionsPage" });
+  }
+
   function markRowSelection(row, isSelected) {
     row.classList.toggle(constants.selectedClassName, isSelected);
   }
@@ -244,21 +249,37 @@
     const errors = toolbar.querySelector('[data-role="error-report"]');
     if (errors) {
       const failedFiles = app.state.getFailedFiles();
-      if (!isPacking && failedFiles.length > 0) {
-        const threshold = 15;
-        const visibleFailed = failedFiles.slice(0, threshold);
-        const moreCount = failedFiles.length - threshold;
-        
+      const lastError = app.state.getLastError(); // Need to add this to state.js
+      
+      if (!isPacking && (failedFiles.length > 0 || lastError)) {
         let errorHtml = `<div style="color: var(--tp-error, #ff7b72); font-size: 12px; margin-bottom: 4px; line-height: 1.4;">`;
-        errorHtml += `<strong>部分檔案下載失敗：</strong><br/>`;
-        errorHtml += visibleFailed.map(f => `• ${f.split('/').pop()}`).join('<br/>');
-        if (moreCount > 0) {
-          errorHtml += `<br/>• ...以及另外 ${moreCount} 項`;
+        
+        if (lastError && (lastError.status === 401 || lastError.status === 404)) {
+          errorHtml += `<strong>權限不足：</strong> 此為私有倉庫或 Token 已過期。<br/>`;
+          errorHtml += `<a href="#" data-action="open-settings" style="color: #58a6ff; text-decoration: underline;">前往設定 GitHub Token</a>`;
+        } else if (failedFiles.length > 0) {
+          const threshold = 15;
+          const visibleFailed = failedFiles.slice(0, threshold);
+          const moreCount = failedFiles.length - threshold;
+          
+          errorHtml += `<strong>部分檔案下載失敗：</strong><br/>`;
+          errorHtml += visibleFailed.map(f => `• ${f.split('/').pop()}`).join('<br/>');
+          if (moreCount > 0) {
+            errorHtml += `<br/>• ...以及另外 ${moreCount} 項`;
+          }
         }
         errorHtml += `</div>`;
         
         errors.innerHTML = errorHtml;
         errors.style.display = "block";
+
+        const settingsLink = errors.querySelector('[data-action="open-settings"]');
+        if (settingsLink) {
+          settingsLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            openOptionsPage();
+          });
+        }
       } else {
         errors.style.display = "none";
         errors.innerHTML = "";
@@ -331,6 +352,12 @@
   }
 
   function showPackError(error) {
+    if (error && (error.status === 401 || error.status === 404)) {
+      if (window.confirm(`${constants.messages.authRequired}\n\n是否現在前往設定 GitHub Token？`)) {
+        openOptionsPage();
+      }
+      return;
+    }
     const message = error && error.message ? error.message : "打包下載失敗";
     window.alert(message);
   }

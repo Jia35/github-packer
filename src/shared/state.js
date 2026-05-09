@@ -7,7 +7,8 @@
     visibleItems: [],
     isPacking: false,
     packingMessage: "",
-    failedFiles: []
+    failedFiles: [],
+    lastError: null
   };
 
   function cloneItem(item) {
@@ -173,6 +174,12 @@
     },
     getFailedFiles() {
       return state.failedFiles || [];
+    },
+    setLastError(error) {
+      state.lastError = error;
+    },
+    getLastError() {
+      return state.lastError;
     }
   };
 })();

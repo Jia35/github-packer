@@ -37,10 +37,17 @@
   }
 
   async function fetchJson(url) {
+    const token = await app.auth.getToken();
+    const headers = {
+      Accept: "application/vnd.github+json"
+    };
+
+    if (token) {
+      headers["Authorization"] = `token ${token}`;
+    }
+
     const response = await fetch(url, {
-      headers: {
-        Accept: "application/vnd.github+json"
-      },
+      headers,
       credentials: "omit"
     });
 
@@ -107,15 +114,27 @@
   }
 
   async function fetchFileContent(context, branch, path) {
-    // // --- 測試用代碼：模擬特定檔案失敗 ---
-    // if (path.includes("README") || path.includes("LICENSE")) {
-    //   throw new Error("模擬下載失敗");
-    // }
+    const token = await app.auth.getToken();
+    
+    let url;
+    let headers = {};
 
-    const response = await fetch(
-      `https://raw.githubusercontent.com/${context.owner}/${context.repo}/${encodeURIComponent(branch)}/${encodePathSegments(path)}`,
-      { credentials: "omit" }
-    );
+    if (token) {
+      // For private repos (or if token is available), use the API with raw media type
+      url = createApiUrl(`/repos/${context.owner}/${context.repo}/contents/${encodePathSegments(path)}?ref=${encodeURIComponent(branch)}`);
+      headers = {
+        "Authorization": `token ${token}`,
+        "Accept": "application/vnd.github.v3.raw"
+      };
+    } else {
+      // Fallback to raw.githubusercontent.com for public repos without token
+      url = `https://raw.githubusercontent.com/${context.owner}/${context.repo}/${encodeURIComponent(branch)}/${encodePathSegments(path)}`;
+    }
+
+    const response = await fetch(url, { 
+      headers,
+      credentials: "omit" 
+    });
 
     if (!response.ok) {
       const error = new Error(`下載檔案失敗: ${path}`);

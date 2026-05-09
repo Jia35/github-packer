@@ -38,7 +38,8 @@
       clearAll: "取消全選",
       clearSelection: "取消選取",
       pack: "打包下載",
-      preparing: "準備中..."
+      preparing: "準備中...",
+      settings: "設定 Token"
     },
     messages: {
       idle: "尚未選取項目",
@@ -47,7 +48,9 @@
       matchingFiles: "整理選取項目中...",
       downloadingFiles: "下載檔案中...",
       buildingArchive: "建立 ZIP 中...",
-      completed: "下載已開始"
+      completed: "下載已開始",
+      privateRepoNotice: "此為私有倉庫，請先 [設定 GitHub Token] 以繼續",
+      authRequired: "權限不足，請檢查 GitHub Token 設定"
     }
   };
 })();
