@@ -97,6 +97,42 @@ body {
     background-color: #ffffff;
 }
 
+/* 鑲嵌圖示按鈕佈局 */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input {
+    padding-right: 40px; /* 為右側按鈕留出空間 */
+}
+
+.icon-button {
+    position: absolute;
+    right: 4px;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.icon-button:hover {
+    background-color: var(--secondary-hover);
+    color: var(--text-main);
+}
+
+.icon-button svg {
+    display: block;
+    pointer-events: none;
+}
+
 .status-message {
     margin-top: 8px;
     font-size: 12px;
