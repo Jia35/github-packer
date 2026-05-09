@@ -178,13 +178,20 @@
   width: 16px;
   min-width: 16px;
   height: 16px;
-  margin-right: 8px;
+  margin-right: 8px; /* 預設維持間距（如中間檔案清單） */
   vertical-align: middle;
   flex: 0 0 auto;
   opacity: 0;
   pointer-events: none;
   transition: opacity 120ms ease;
 }
+
+/* 側邊欄檔案樹專用：移除右邊距以符合緊湊佈局 */
+#repos-file-tree .github-packer-checkbox,
+[data-testid*="file-tree"] .github-packer-checkbox {
+  margin-right: 0;
+}
+
 
 .github-packer-checkbox--spacer {
   opacity: 1;
