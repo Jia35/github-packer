@@ -2,6 +2,11 @@
   const app = (window.GitHubPacker = window.GitHubPacker || {});
   const constants = app.constants;
 
+  const ICONS = {
+    download: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg>`,
+    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="github-packer-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`
+  };
+
   function createCheckbox(item) {
     const wrapper = document.createElement("label");
     wrapper.className = "github-packer-checkbox";
@@ -186,8 +191,11 @@
     toggleAllButton.disabled = isPacking || items.length === 0;
     clearSelectionButton.textContent = constants.labels.clearSelection;
     clearSelectionButton.disabled = isPacking || !hasSelection;
-    packButton.textContent = isPacking ? constants.labels.preparing : constants.labels.pack;
+    const label = isPacking ? constants.labels.preparing : constants.labels.pack;
+    const icon = isPacking ? ICONS.spinner : ICONS.download;
+    packButton.innerHTML = `${icon}<span>${label}</span>`;
     packButton.disabled = isPacking || !hasSelection;
+    
     status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
     toolbar.classList.toggle(constants.loadingClassName, isPacking);
     toolbar.classList.toggle("github-packer-toolbar--visible", hasSelection || isPacking);
