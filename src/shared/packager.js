@@ -342,7 +342,6 @@
     }
 
     updateProgress(onProgress, constants.messages.downloadingFiles, `0 / ${matched.files.length}`);
-    const failed = [];
     const downloadedFiles = (await mapWithConcurrency(matched.files, 4, async (file, index) => {
       try {
         const bytes = await fetchFileContent(context, branch, file.path);
@@ -358,13 +357,29 @@
           bytes
         };
       } catch (error) {
+        if (error.name === "AbortError") {
+          // 中止時不印錯誤，我們會在最後統一處理未完成清單
+          return null;
+        }
         console.error(`[GitHub Packer] Failed to download ${file.path}:`, error);
-        failed.push(file.path);
         return null;
       }
     }, signal)).filter(Boolean);
 
+    const isAborted = signal && signal.aborted;
+
+    // 比對原始計畫與成功下載的檔案，找出所有「未完成」的項目 (包含失敗與被跳過的)
+    const downloadedPaths = new Set(downloadedFiles.map((f) => f.path));
+    const incompleteFiles = matched.files
+      .filter((f) => !downloadedPaths.has(f.path))
+      .map((f) => f.path);
+
     if (!downloadedFiles.length) {
+      if (isAborted) {
+        const error = new Error("下載已中止");
+        error.name = "AbortError";
+        throw error;
+      }
       throw new Error("所有檔案均下載失敗，請檢查網路連線或 GitHub 狀態。");
     }
 
@@ -375,7 +390,8 @@
     return {
       branch,
       fileCount: downloadedFiles.length,
-      failed,
+      failed: incompleteFiles,
+      aborted: isAborted,
       missing: matched.missing,
       truncated: tree.truncated
     };

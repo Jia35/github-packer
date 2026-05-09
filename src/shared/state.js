@@ -9,6 +9,7 @@
     packingMessage: "",
     failedFiles: [],
     lastError: null,
+    isAborted: false,
     abortController: null
   };
 
@@ -159,6 +160,7 @@
       state.isPacking = Boolean(isPacking);
       if (state.isPacking) {
         state.abortController = new AbortController();
+        state.isAborted = false; // 重新開始時重置中止狀態
       } else {
         state.packingMessage = "";
         state.abortController = null;
@@ -166,6 +168,12 @@
     },
     isPacking() {
       return state.isPacking;
+    },
+    setAborted(aborted) {
+      state.isAborted = Boolean(aborted);
+    },
+    isAborted() {
+      return state.isAborted;
     },
     cancelPacking() {
       if (state.abortController) {

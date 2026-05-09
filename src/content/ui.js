@@ -90,9 +90,10 @@
       const threshold = 15;
       const visibleFailed = failedFiles.slice(0, threshold);
       const moreCount = failedFiles.length - threshold;
+      const isAborted = app.state.isAborted();
 
       const strong = document.createElement("strong");
-      strong.textContent = "部分檔案下載失敗：";
+      strong.textContent = isAborted ? "尚未下載的檔案清單：" : "部分檔案下載失敗：";
       container.appendChild(strong);
       container.appendChild(document.createElement("br"));
 

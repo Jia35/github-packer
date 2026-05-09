@@ -39,7 +39,7 @@
       clearSelection: "取消選取",
       pack: "打包下載",
       preparing: "準備中...",
-      cancel: "中止打包",
+      cancel: "中止下載",
       settings: "設定 Token"
     },
     messages: {

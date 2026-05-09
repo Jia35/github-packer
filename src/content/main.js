@@ -106,7 +106,7 @@
 
   function updateBeforeUnloadGuard() {
     if (app.state.isPacking()) {
-      window.onbeforeunload = () => "正在打包中，確定要離開嗎？";
+      window.onbeforeunload = () => "正在打包下載中，確定要離開嗎？";
       return;
     }
 
@@ -168,13 +168,21 @@
       }, { signal });
 
       app.state.setFailedFiles(result.failed || []);
-      app.state.setPackingMessage(constants.messages.completed);
+      app.state.setAborted(result.aborted || false);
+      
+      if (result.aborted) {
+        app.state.setPackingMessage("已中止下載 (部分完成)");
+      } else {
+        app.state.setPackingMessage(constants.messages.completed);
+      }
+      
       refresh();
       app.ui.showPackResult(result);
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("[GitHub Packer] packing cancelled");
-        app.state.setPackingMessage("已中止打包");
+        console.log("[GitHub Packer] packing cancelled before any downloads");
+        app.state.setPackingMessage("已中止下載");
+        app.state.setFailedFiles([]); // 尚未開始就中止，不顯示清單
       } else {
         console.error("[GitHub Packer] pack failed", error);
         app.state.setLastError(error);
