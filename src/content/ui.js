@@ -222,9 +222,10 @@
         return;
       }
 
-      const isSelected = app.state.isSelected(item.path);
-      checkbox.checked = isSelected;
-      markRowSelection(item.element, isSelected);
+      const status = app.state.getSelectionStatus(item.path);
+      checkbox.checked = status === "checked";
+      checkbox.indeterminate = status === "indeterminate";
+      markRowSelection(item.element, status !== "unchecked");
     });
   }
 

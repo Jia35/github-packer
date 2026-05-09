@@ -87,55 +87,12 @@
     };
   }
 
-  function normalizeSelectedPaths(selectedItems) {
-    const seen = new Set();
-
-    return selectedItems.filter((item) => {
-      if (!item || !item.path || seen.has(item.path)) {
-        return false;
-      }
-
-      seen.add(item.path);
-      return true;
-    });
-  }
-
-  function resolveFilesFromSelection(repositoryFiles, selectedItems) {
-    const filesByPath = new Map(repositoryFiles.map((file) => [file.path, file]));
-    const matched = new Map();
-    const missing = [];
-
-    normalizeSelectedPaths(selectedItems).forEach((item) => {
-      if (item.kind === "file") {
-        const file = filesByPath.get(item.path);
-
-        if (!file) {
-          missing.push(item.path);
-          return;
-        }
-
-        matched.set(file.path, file);
-        return;
-      }
-
-      const prefix = `${item.path}/`;
-      let found = false;
-
-      repositoryFiles.forEach((file) => {
-        if (file.path.startsWith(prefix)) {
-          matched.set(file.path, file);
-          found = true;
-        }
-      });
-
-      if (!found) {
-        missing.push(item.path);
-      }
-    });
+  function resolveFilesFromSelection(repositoryFiles, isSelectedPredicate) {
+    const matched = repositoryFiles.filter((file) => isSelectedPredicate(file.path));
 
     return {
-      files: Array.from(matched.values()).sort((left, right) => left.path.localeCompare(right.path)),
-      missing
+      files: matched.sort((left, right) => left.path.localeCompare(right.path)),
+      missing: [] // In this model, we filter the tree directly, so "missing" is not applicable in the same way
     };
   }
 
@@ -319,7 +276,7 @@
     }, 1000);
   }
 
-  async function packSelection(context, selectedItems, onProgress) {
+  async function packSelection(context, isSelectedPredicate, onProgress) {
     if (!context || !context.owner || !context.repo) {
       throw new Error("找不到目前的 GitHub 儲存庫資訊");
     }
@@ -335,7 +292,7 @@
     const tree = await fetchRepositoryTree(context, branch);
 
     updateProgress(onProgress, constants.messages.matchingFiles);
-    const matched = resolveFilesFromSelection(tree.files, selectedItems);
+    const matched = resolveFilesFromSelection(tree.files, isSelectedPredicate);
 
     if (!matched.files.length) {
       throw new Error(`找不到可下載的檔案：${formatMissingPreview(matched.missing)}`);

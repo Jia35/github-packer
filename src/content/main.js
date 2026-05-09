@@ -42,10 +42,10 @@
   }
 
   async function handlePack() {
-    const selectedItems = app.state.getSelectedItems();
+    const hasSelection = app.state.hasSelection();
     const context = app.github.getRepositoryContext();
 
-    if (!selectedItems.length || app.state.isPacking()) {
+    if (!hasSelection || app.state.isPacking()) {
       return;
     }
 
@@ -55,7 +55,8 @@
     refresh();
 
     try {
-      const result = await app.packager.packSelection(context, selectedItems, (message, detail) => {
+      const isSelectedPredicate = (path) => app.state.isEffectivelyIncluded(path);
+      const result = await app.packager.packSelection(context, isSelectedPredicate, (message, detail) => {
         app.state.setPackingMessage(detail ? `${message} (${detail})` : message);
         refresh();
       });
