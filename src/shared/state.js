@@ -8,7 +8,8 @@
     isPacking: false,
     packingMessage: "",
     failedFiles: [],
-    lastError: null
+    lastError: null,
+    abortController: null
   };
 
   function cloneItem(item) {
@@ -156,12 +157,23 @@
     },
     setPacking(isPacking) {
       state.isPacking = Boolean(isPacking);
-      if (!state.isPacking) {
+      if (state.isPacking) {
+        state.abortController = new AbortController();
+      } else {
         state.packingMessage = "";
+        state.abortController = null;
       }
     },
     isPacking() {
       return state.isPacking;
+    },
+    cancelPacking() {
+      if (state.abortController) {
+        state.abortController.abort();
+      }
+    },
+    getSignal() {
+      return state.abortController ? state.abortController.signal : null;
     },
     setPackingMessage(message) {
       state.packingMessage = message || "";

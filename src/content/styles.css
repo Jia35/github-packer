@@ -195,6 +195,21 @@
   box-shadow: 0 6px 16px rgba(31, 136, 61, 0.3);
 }
 
+.github-packer-button--danger {
+  background: linear-gradient(180deg, #da3633 0%, #b62320 100%);
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.github-packer-button--danger:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f85149 0%, #da3633 100%);
+  box-shadow: 0 6px 16px rgba(218, 54, 51, 0.3);
+}
+
+.github-packer-button--fixed-width {
+  min-width: 120px; /* 確保打包與中止按鈕寬度一致 */
+}
+
 .github-packer-checkbox {
   display: inline-flex;
   align-items: center;

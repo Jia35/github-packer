@@ -143,7 +143,12 @@
     const hasSelection = app.state.hasSelection();
     const context = app.github.getRepositoryContext();
 
-    if (!hasSelection || app.state.isPacking()) {
+    if (!hasSelection) {
+      return;
+    }
+
+    if (app.state.isPacking()) {
+      app.state.cancelPacking();
       return;
     }
 
@@ -156,18 +161,24 @@
 
     try {
       const isSelectedPredicate = (path) => app.state.isEffectivelyIncluded(path);
+      const signal = app.state.getSignal();
       const result = await app.packager.packSelection(context, isSelectedPredicate, (message, detail) => {
         app.state.setPackingMessage(detail ? `${message} (${detail})` : message);
         refresh();
-      });
+      }, { signal });
 
       app.state.setFailedFiles(result.failed || []);
       app.state.setPackingMessage(constants.messages.completed);
       refresh();
       app.ui.showPackResult(result);
     } catch (error) {
-      console.error("[GitHub Packer] pack failed", error);
-      app.state.setLastError(error);
+      if (error.name === "AbortError") {
+        console.log("[GitHub Packer] packing cancelled");
+        app.state.setPackingMessage("已中止打包");
+      } else {
+        console.error("[GitHub Packer] pack failed", error);
+        app.state.setLastError(error);
+      }
     } finally {
       window.setTimeout(() => {
         app.state.setPacking(false);

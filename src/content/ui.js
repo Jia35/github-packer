@@ -4,7 +4,8 @@
 
   const ICONS = {
     download: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg>`,
-    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="github-packer-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`
+    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="github-packer-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`,
+    cancel: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.343 13.657A8 8 0 1 1 13.657 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path></svg>`
   };
 
   function setNodeChildren(node, children) {
@@ -34,12 +35,20 @@
       return;
     }
 
-    const icon = createIconFragment(isPacking ? ICONS.spinner : ICONS.download);
+    const iconMarkup = isPacking ? ICONS.cancel : ICONS.download;
+    const labelText = isPacking ? constants.labels.cancel : constants.labels.pack;
+    
+    const icon = createIconFragment(iconMarkup);
     const label = document.createElement("span");
-    label.textContent = isPacking ? constants.labels.preparing : constants.labels.pack;
+    label.textContent = labelText;
 
     setNodeChildren(button, [icon, label]);
     button.dataset.mode = nextMode;
+    
+    // 切換樣式
+    button.classList.toggle("github-packer-button--primary", !isPacking);
+    button.classList.toggle("github-packer-button--danger", isPacking);
+    button.classList.add("github-packer-button--fixed-width");
   }
 
   function renderToolbarErrors(errors, failedFiles, lastError) {
@@ -342,7 +351,7 @@
     clearSelectionButton.textContent = constants.labels.clearSelection;
     clearSelectionButton.disabled = isPacking || !hasSelection;
     updatePackButtonContent(packButton, isPacking);
-    packButton.disabled = isPacking || !hasSelection;
+    packButton.disabled = !hasSelection; // Packing 狀態時不再禁用，因為要處理點擊中止
     
     status.textContent = isPacking ? packingMessage || constants.messages.resolvingBranch : getToolbarText(selectedCount);
     

@@ -36,7 +36,7 @@
       .join("/");
   }
 
-  async function fetchJson(url) {
+  async function fetchJson(url, options = {}) {
     const token = await app.auth.getToken();
     const headers = {
       Accept: "application/vnd.github+json"
@@ -48,7 +48,8 @@
 
     const response = await fetch(url, {
       headers,
-      credentials: "omit"
+      credentials: "omit",
+      signal: options.signal
     });
 
     if (!response.ok) {
@@ -74,14 +75,15 @@
       return context.branch;
     }
 
-    const repo = await fetchJson(createApiUrl(`/repos/${context.owner}/${context.repo}`));
+    const repo = await fetchJson(createApiUrl(`/repos/${context.owner}/${context.repo}`), { signal: context.signal });
     return repo.default_branch || "";
   }
 
   async function fetchRepositoryTree(context, branch) {
     const encodedRef = encodeURIComponent(branch);
     const tree = await fetchJson(
-      createApiUrl(`/repos/${context.owner}/${context.repo}/git/trees/${encodedRef}?recursive=1`)
+      createApiUrl(`/repos/${context.owner}/${context.repo}/git/trees/${encodedRef}?recursive=1`),
+      { signal: context.signal }
     );
 
     if (!Array.isArray(tree.tree)) {
@@ -133,7 +135,8 @@
 
     const response = await fetch(url, { 
       headers,
-      credentials: "omit" 
+      credentials: "omit",
+      signal: context.signal
     });
 
     if (!response.ok) {
@@ -145,12 +148,15 @@
     return new Uint8Array(await response.arrayBuffer());
   }
 
-  async function mapWithConcurrency(items, concurrency, iteratee) {
+  async function mapWithConcurrency(items, concurrency, iteratee, signal) {
     const results = new Array(items.length);
     let cursor = 0;
 
     async function worker() {
       while (cursor < items.length) {
+        if (signal && signal.aborted) {
+          return;
+        }
         const currentIndex = cursor;
         cursor += 1;
         results[currentIndex] = await iteratee(items[currentIndex], currentIndex);
@@ -300,7 +306,10 @@
     }, 1000);
   }
 
-  async function packSelection(context, isSelectedPredicate, onProgress) {
+  async function packSelection(context, isSelectedPredicate, onProgress, options = {}) {
+    const signal = options.signal;
+    context.signal = signal; // Propagate signal via context for simplicity in inner calls
+
     if (!context || !context.owner || !context.repo) {
       throw new Error("找不到目前的 GitHub 儲存庫資訊");
     }
@@ -343,7 +352,7 @@
         failed.push(file.path);
         return null;
       }
-    })).filter(Boolean);
+    }, signal)).filter(Boolean);
 
     if (!downloadedFiles.length) {
       throw new Error("所有檔案均下載失敗，請檢查網路連線或 GitHub 狀態。");
