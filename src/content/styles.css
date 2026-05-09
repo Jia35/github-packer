@@ -1,4 +1,4 @@
-#github-packer-toolbar {
+#packer-for-github-toolbar {
   /* 定義主題變數：預設為深色 UI (對應 GitHub 淺色主題) */
   --tp-bg: linear-gradient(135deg, rgba(13, 17, 23, 0.9) 0%, rgba(22, 27, 34, 0.95) 100%);
   --tp-border: rgba(205, 217, 229, 0.2);
@@ -44,7 +44,7 @@
 /* --- 反差主題切換邏輯 --- */
 
 /* 情況 A：GitHub 手動設定為深色主題 -> Toolbar 變淺色 */
-[data-color-mode="dark"] #github-packer-toolbar {
+[data-color-mode="dark"] #packer-for-github-toolbar {
   --tp-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(246, 248, 250, 0.95) 100%);
   --tp-border: rgba(9, 105, 218, 0.3);
   --tp-text: #1f2328;
@@ -59,7 +59,7 @@
 }
 
 /* 情況 B：GitHub 設定為自動，且系統為深色 -> Toolbar 變淺色 */
-[data-color-mode="auto"] #github-packer-toolbar {
+[data-color-mode="auto"] #packer-for-github-toolbar {
   @media (prefers-color-scheme: dark) {
     --tp-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(246, 248, 250, 0.95) 100%);
     --tp-border: rgba(9, 105, 218, 0.3);
@@ -74,7 +74,7 @@
   }
 }
 
-#github-packer-toolbar.github-packer-toolbar--visible {
+#packer-for-github-toolbar.packer-for-github-toolbar--visible {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
@@ -82,7 +82,7 @@
 }
 
 @media (max-width: 575px) {
-  #github-packer-toolbar {
+  #packer-for-github-toolbar {
     right: 16px;
     bottom: 16px;
     left: 16px;
@@ -90,7 +90,7 @@
   }
 }
 
-.github-packer-toolbar__logo {
+.packer-for-github-toolbar__logo {
   float: right;
   margin-left: 12px;
   margin-bottom: 4px;
@@ -102,7 +102,7 @@
 }
 
 
-.github-packer-toolbar__group {
+.packer-for-github-toolbar__group {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -114,16 +114,16 @@
 }
 
 /* 旋轉動畫 */
-@keyframes github-packer-spin {
+@keyframes packer-for-github-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-.github-packer-spinner {
-  animation: github-packer-spin 1s linear infinite;
+.packer-for-github-spinner {
+  animation: packer-for-github-spin 1s linear infinite;
 }
 
-.github-packer-toolbar__status {
+.packer-for-github-toolbar__status {
   margin: 0;
   padding: 0 4px;
   text-align: left;
@@ -133,7 +133,7 @@
   letter-spacing: -0.01em;
 }
 
-.github-packer-toolbar__errors {
+.packer-for-github-toolbar__errors {
   margin-bottom: 12px;
   max-height: 360px;
   overflow-y: auto;
@@ -143,7 +143,7 @@
   border-radius: 4px;
 }
 
-.github-packer-button {
+.packer-for-github-button {
   appearance: none;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -158,59 +158,59 @@
   justify-content: center;
 }
 
-.github-packer-button:hover:not(:disabled) {
+.packer-for-github-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.github-packer-button:active:not(:disabled) {
+.packer-for-github-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.github-packer-button:disabled {
+.packer-for-github-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
   filter: grayscale(0.5);
 }
 
-.github-packer-button--secondary {
+.packer-for-github-button--secondary {
   border-color: var(--tp-btn-sec-border);
   background: var(--tp-btn-sec-bg);
   color: var(--tp-btn-sec-text);
 }
 
-.github-packer-button--secondary:hover:not(:disabled) {
+.packer-for-github-button--secondary:hover:not(:disabled) {
   background: var(--tp-btn-sec-hover);
 }
 
-.github-packer-button--primary {
+.packer-for-github-button--primary {
   background: linear-gradient(180deg, #1f883d 0%, #1a7f37 100%);
   color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.github-packer-button--primary:hover:not(:disabled) {
+.packer-for-github-button--primary:hover:not(:disabled) {
   background: linear-gradient(180deg, #269a47 0%, #1f883d 100%);
   box-shadow: 0 6px 16px rgba(31, 136, 61, 0.3);
 }
 
-.github-packer-button--danger {
+.packer-for-github-button--danger {
   background: linear-gradient(180deg, #da3633 0%, #b62320 100%);
   color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.github-packer-button--danger:hover:not(:disabled) {
+.packer-for-github-button--danger:hover:not(:disabled) {
   background: linear-gradient(180deg, #f85149 0%, #da3633 100%);
   box-shadow: 0 6px 16px rgba(218, 54, 51, 0.3);
 }
 
-.github-packer-button--fixed-width {
+.packer-for-github-button--fixed-width {
   min-width: 120px; /* 確保打包與中止按鈕寬度一致 */
 }
 
-.github-packer-checkbox {
+.packer-for-github-checkbox {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -226,83 +226,83 @@
 }
 
 /* 側邊欄檔案樹專用：移除右邊距以符合緊湊佈局 */
-#repos-file-tree .github-packer-checkbox,
-[data-testid*="file-tree"] .github-packer-checkbox {
+#repos-file-tree .packer-for-github-checkbox,
+[data-testid*="file-tree"] .packer-for-github-checkbox {
   margin-right: 0;
 }
 
 
-.github-packer-checkbox--spacer {
+.packer-for-github-checkbox--spacer {
   opacity: 1;
   pointer-events: none;
 }
 
-.github-packer-inline-target {
+.packer-for-github-inline-target {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
 }
 
-.github-packer-parent-directory-target {
+.packer-for-github-parent-directory-target {
   display: flex;
   align-items: center;
 }
 
-[data-github-packer-row="true"]:hover [data-github-packer-target] > .github-packer-checkbox,
-[data-github-packer-row="true"].github-packer-selected [data-github-packer-target] > .github-packer-checkbox {
+[data-packer-for-github-row="true"]:hover [data-packer-for-github-target] > .packer-for-github-checkbox,
+[data-packer-for-github-row="true"].packer-for-github-selected [data-packer-for-github-target] > .packer-for-github-checkbox {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* 全域選取模式：強制顯示所有 Checkbox，不被 hover 重置規則干擾 */
-.github-packer-has-selection [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+.packer-for-github-has-selection [data-packer-for-github-row="true"] [data-packer-for-github-target] > .packer-for-github-checkbox {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
 /* 隱藏深層巢狀項目的 checkbox (僅在非全域選取模式下生效) */
-html:not(.github-packer-has-selection) [data-github-packer-row="true"]:hover [data-github-packer-row="true"] [data-github-packer-target] > .github-packer-checkbox {
+html:not(.packer-for-github-has-selection) [data-packer-for-github-row="true"]:hover [data-packer-for-github-row="true"] [data-packer-for-github-target] > .packer-for-github-checkbox {
   opacity: 0;
   pointer-events: none;
 }
 
 /* 確保直接被 hover 的子項目 checkbox 依然顯示 */
-[data-github-packer-row="true"] [data-github-packer-row="true"]:hover [data-github-packer-target] > .github-packer-checkbox {
+[data-packer-for-github-row="true"] [data-packer-for-github-row="true"]:hover [data-packer-for-github-target] > .packer-for-github-checkbox {
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-.github-packer-checkbox__input {
+.packer-for-github-checkbox__input {
   width: 14px;
   height: 14px;
   margin: 0;
   cursor: pointer;
 }
 
-[data-github-packer-row="true"].github-packer-selected {
+[data-packer-for-github-row="true"].packer-for-github-selected {
   background-color: rgba(9, 105, 218, 0.12) !important;
 }
 
 @media (prefers-color-scheme: dark) {
-  [data-github-packer-row="true"].github-packer-selected {
+  [data-packer-for-github-row="true"].packer-for-github-selected {
     background-color: rgba(56, 139, 253, 0.15) !important;
   }
 }
 
-#github-packer-toolbar.github-packer-loading .github-packer-button--primary {
+#packer-for-github-toolbar.packer-for-github-loading .packer-for-github-button--primary {
   background: #6e7681;
   pointer-events: none;
   opacity: 0.8;
 }
 
 /* 打包中狀態文字微動動畫 */
-@keyframes github-packer-pulse {
+@keyframes packer-for-github-pulse {
   0% { opacity: 1; }
   50% { opacity: 0.6; }
   100% { opacity: 1; }
 }
 
-.github-packer-loading .github-packer-toolbar__status {
-  animation: github-packer-pulse 1.5s infinite ease-in-out;
+.packer-for-github-loading .packer-for-github-toolbar__status {
+  animation: packer-for-github-pulse 1.5s infinite ease-in-out;
 }

@@ -1,10 +1,10 @@
 (function bootstrapUi() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
   const constants = app.constants;
 
   const ICONS = {
     download: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg>`,
-    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="github-packer-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`,
+    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="packer-for-github-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`,
     cancel: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.343 13.657A8 8 0 1 1 13.657 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path></svg>`
   };
 
@@ -46,9 +46,9 @@
     button.dataset.mode = nextMode;
     
     // 切換樣式
-    button.classList.toggle("github-packer-button--primary", !isPacking);
-    button.classList.toggle("github-packer-button--danger", isPacking);
-    button.classList.add("github-packer-button--fixed-width");
+    button.classList.toggle("packer-for-github-button--primary", !isPacking);
+    button.classList.toggle("packer-for-github-button--danger", isPacking);
+    button.classList.add("packer-for-github-button--fixed-width");
   }
 
   function renderToolbarErrors(errors, failedFiles, lastError) {
@@ -120,12 +120,12 @@
 
   function createCheckbox(item) {
     const wrapper = document.createElement("label");
-    wrapper.className = "github-packer-checkbox";
+    wrapper.className = "packer-for-github-checkbox";
     wrapper.title = item.kind === "directory" ? app.i18n.t('ui.selectFolder') : app.i18n.t('ui.selectFile');
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.className = "github-packer-checkbox__input";
+    checkbox.className = "packer-for-github-checkbox__input";
     checkbox.checked = app.state.isSelected(item.path);
     checkbox.setAttribute(constants.checkboxMarker, "true");
     checkbox.setAttribute(constants.itemPathMarker, item.path);
@@ -175,7 +175,7 @@
     }
 
     const spacer = document.createElement("span");
-    spacer.className = "github-packer-checkbox github-packer-checkbox--spacer";
+    spacer.className = "packer-for-github-checkbox packer-for-github-checkbox--spacer";
     spacer.setAttribute(constants.spacerMarker, "true");
     spacer.setAttribute("aria-hidden", "true");
 
@@ -208,7 +208,7 @@
       e.stopPropagation();
     });
 
-    target.classList.add("github-packer-inline-target");
+    target.classList.add("packer-for-github-inline-target");
     target.setAttribute(constants.targetMarker, "true");
 
     if (item.link && item.link.parentNode === target) {
@@ -260,7 +260,7 @@
       return;
     }
 
-    container.classList.add("github-packer-parent-directory-target");
+    container.classList.add("packer-for-github-parent-directory-target");
     ensureSpacer(container);
   }
 
@@ -274,37 +274,38 @@
     if (!toolbar) {
       toolbar = document.createElement("section");
       toolbar.id = constants.toolbarId;
-      toolbar.className = "github-packer-toolbar";
+      toolbar.className = "packer-for-github-toolbar";
+      toolbar.title = "Packer for GitHub";
       toolbar.setAttribute(constants.toolbarMarker, "true");
 
       const left = document.createElement("div");
-      left.className = "github-packer-toolbar__group";
+      left.className = "packer-for-github-toolbar__group";
 
       const selectAllButton = document.createElement("button");
       selectAllButton.type = "button";
-      selectAllButton.className = "github-packer-button github-packer-button--secondary";
+      selectAllButton.className = "packer-for-github-button packer-for-github-button--secondary";
       selectAllButton.dataset.action = "toggle-all";
       selectAllButton.addEventListener("click", handlers.onToggleAll);
 
       const clearSelectionButton = document.createElement("button");
       clearSelectionButton.type = "button";
-      clearSelectionButton.className = "github-packer-button github-packer-button--secondary";
+      clearSelectionButton.className = "packer-for-github-button packer-for-github-button--secondary";
       clearSelectionButton.dataset.action = "clear-selection";
       clearSelectionButton.addEventListener("click", handlers.onClearSelection);
 
       const packButton = document.createElement("button");
       packButton.type = "button";
-      packButton.className = "github-packer-button github-packer-button--primary";
+      packButton.className = "packer-for-github-button packer-for-github-button--primary";
       packButton.dataset.action = "pack";
       packButton.addEventListener("click", handlers.onPack);
       updatePackButtonContent(packButton, false);
 
       const status = document.createElement("p");
-      status.className = "github-packer-toolbar__status";
+      status.className = "packer-for-github-toolbar__status";
       status.dataset.role = "status";
 
       const errors = document.createElement("div");
-      errors.className = "github-packer-toolbar__errors";
+      errors.className = "packer-for-github-toolbar__errors";
       errors.dataset.role = "error-report";
       errors.style.display = "none";
 
@@ -313,8 +314,8 @@
       left.appendChild(packButton);
 
       const logo = document.createElement("img");
-      logo.className = "github-packer-toolbar__logo";
-      logo.alt = "GitHub Packer Logo";
+      logo.className = "packer-for-github-toolbar__logo";
+      logo.alt = "Packer for GitHub Logo";
 
       toolbar.appendChild(logo);
       toolbar.appendChild(errors);
@@ -370,7 +371,7 @@
     }
     
     const theme = getEffectiveTheme();
-    const logo = toolbar.querySelector(".github-packer-toolbar__logo");
+    const logo = toolbar.querySelector(".packer-for-github-toolbar__logo");
     if (logo) {
       // 根據 GitHub 主題決定 Logo (注意：Toolbar 目前採反差色設計)
       // GitHub 淺色 (theme=light) -> Toolbar 深色 -> 使用白色 Logo (logo_32_w)
@@ -387,7 +388,7 @@
     }
 
     toolbar.classList.toggle(constants.loadingClassName, isPacking);
-    toolbar.classList.toggle("github-packer-toolbar--visible", hasSelection || isPacking);
+    toolbar.classList.toggle("packer-for-github-toolbar--visible", hasSelection || isPacking);
     syncSelectionVisibility();
   }
 

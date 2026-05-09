@@ -1,5 +1,5 @@
 (function bootstrapContentScript() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
   const constants = app.constants;
 
   let renderTimer = null;
@@ -180,11 +180,11 @@
       app.ui.showPackResult(result);
     } catch (error) {
       if (error.name === "AbortError") {
-        console.log("[GitHub Packer] packing cancelled before any downloads");
+        console.log("[Packer for GitHub] packing cancelled before any downloads");
         app.state.setPackingMessage(app.i18n.t('labels.cancel'));
         app.state.setFailedFiles([]); // 尚未開始就中止，不顯示清單
       } else {
-        console.error("[GitHub Packer] pack failed", error);
+        console.error("[Packer for GitHub] pack failed", error);
         app.state.setLastError(error);
       }
     } finally {

@@ -1,5 +1,5 @@
 (function bootstrapGitHubHelpers() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
   const constants = app.constants;
 
   function parseRepositoryName() {

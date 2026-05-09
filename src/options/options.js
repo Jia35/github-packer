@@ -1,5 +1,5 @@
 (async function initOptions() {
-  const app = window.GitHubPacker;
+  const app = window.PackerForGitHub;
   
   // Initialize i18n
   await app.i18n.init();
@@ -40,7 +40,7 @@
 
     // Footer
     const footerText = document.getElementById("footer-text");
-    footerText.childNodes[0].textContent = "© 2026 GitHub Packer. ";
+    footerText.childNodes[0].textContent = "© 2026 Packer for GitHub. ";
     
     // Language options
     const langOptions = languageSelect.options;

@@ -1,5 +1,5 @@
 (function bootstrapAuth() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
 
   const STORAGE_KEYS = {
     GITHUB_TOKEN: "gh_packer_token",

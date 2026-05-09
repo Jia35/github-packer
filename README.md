@@ -1,4 +1,4 @@
-# GitHub Packer
+# Packer for GitHub
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -17,7 +17,7 @@ A browser extension that allows you to selectively pick files and folders from a
 
 ## 🚀 Installation (Development)
 
-Currently, GitHub Packer is in development. You can load it manually:
+Currently, Packer for GitHub is in development. You can load it manually:
 
 1. Download or clone this repository.
 2. Open Chrome and navigate to `chrome://extensions`.
@@ -33,7 +33,7 @@ To download files from private repositories, you need to set up a Personal Acces
 3. Set **Repository access** to "All repositories" (or specific ones).
 4. Set **Permissions** -> **Contents** to "Read-only".
 5. Copy the token.
-6. Open the **GitHub Packer Options** (Right-click extension icon -> Options).
+6. Open the **Packer for GitHub Options** (Right-click extension icon -> Options).
 7. Paste your token and save.
 
 ## 🛡️ Privacy & Security

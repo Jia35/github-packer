@@ -1,20 +1,20 @@
 (function bootstrapConstants() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
 
   app.constants = {
-    namespace: "github-packer",
-    toolbarId: "github-packer-toolbar",
-    toolbarMarker: "data-github-packer-toolbar",
-    rowMarker: "data-github-packer-row",
-    spacerMarker: "data-github-packer-spacer",
-    checkboxMarker: "data-github-packer-checkbox",
-    targetMarker: "data-github-packer-target",
-    itemPathMarker: "data-github-packer-item-path",
-    itemKindMarker: "data-github-packer-item-kind",
-    selectedClassName: "github-packer-selected",
-    loadingClassName: "github-packer-loading",
-    activeSelectionClassName: "github-packer-has-selection",
-    currentDirectoryMeta: "github-packer-current-directory",
+    namespace: "packer-for-github",
+    toolbarId: "packer-for-github-toolbar",
+    toolbarMarker: "data-packer-for-github-toolbar",
+    rowMarker: "data-packer-for-github-row",
+    spacerMarker: "data-packer-for-github-spacer",
+    checkboxMarker: "data-packer-for-github-checkbox",
+    targetMarker: "data-packer-for-github-target",
+    itemPathMarker: "data-packer-for-github-item-path",
+    itemKindMarker: "data-packer-for-github-item-kind",
+    selectedClassName: "packer-for-github-selected",
+    loadingClassName: "packer-for-github-loading",
+    activeSelectionClassName: "packer-for-github-has-selection",
+    currentDirectoryMeta: "packer-for-github-current-directory",
     renderDebounceMs: 120,
     selectors: {
       rootMain: "main",

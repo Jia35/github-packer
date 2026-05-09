@@ -1,5 +1,5 @@
 (function bootstrapState() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
 
   const state = {
     includeItems: new Map(), // Key: path, Value: item

@@ -1,5 +1,5 @@
 (function bootstrapI18n() {
-  const app = (window.GitHubPacker = window.GitHubPacker || {});
+  const app = (window.PackerForGitHub = window.PackerForGitHub || {});
 
   const dictionaries = {
     en: {
@@ -45,7 +45,7 @@
         missingItemsNotice: "Some items not found in current branch, skipped:\n{preview}{suffix}"
       },
       options: {
-        title: "GitHub Packer Settings",
+        title: "Packer for GitHub Settings",
         authTitle: "GitHub Authentication",
         authDesc: "Set Personal Access Token (PAT) to support private repositories.",
         tokenPlaceholder: "ghp_xxxxxxxxxxxx",
@@ -113,7 +113,7 @@
         missingItemsNotice: "部分項目在目前分支中找不到，已略過：\n{preview}{suffix}"
       },
       options: {
-        title: "GitHub Packer 設定",
+        title: "Packer for GitHub 設定",
         authTitle: "GitHub 認證設定",
         authDesc: "設定 Personal Access Token (PAT) 以支援下載私有儲存庫的內容。",
         tokenPlaceholder: "ghp_xxxxxxxxxxxx",
@@ -129,7 +129,7 @@
         info2: "隱私說明：此 Token 僅會儲存在您本地瀏覽器的 <strong>chrome.storage</strong> 中，不會傳送至任何第三方伺服器。",
         info3: "GitHub 官方文件：",
         infoLink: "如何建立 GitHub Personal Access Token？",
-        footerPrefix: "© 2026 GitHub Packer. ",
+        footerPrefix: "© 2026 Packer for GitHub. ",
         languages: {
           auto: "跟隨瀏覽器語言",
           zh_TW: "繁體中文",
@@ -182,7 +182,7 @@
         missingItemsNotice: "現在のブランチで見つからない項目があります。スキップされました：\n{preview}{suffix}"
       },
       options: {
-        title: "GitHub Packer 設定",
+        title: "Packer for GitHub 設定",
         authTitle: "GitHub 認証設定",
         authDesc: "プライベートリポジトリをサポートするために Personal Access Token (PAT) を設定します。",
         tokenPlaceholder: "ghp_xxxxxxxxxxxx",
@@ -250,7 +250,7 @@
         missingItemsNotice: "현재 브랜치에서 찾을 수 없는 항목이 있습니다. 건너뜁니다:\n{preview}{suffix}"
       },
       options: {
-        title: "GitHub Packer 설정",
+        title: "Packer for GitHub 설정",
         authTitle: "GitHub 인증 설정",
         authDesc: "비공개 저장소를 지원하기 위해 Personal Access Token (PAT)을 설정합니다.",
         tokenPlaceholder: "ghp_xxxxxxxxxxxx",
