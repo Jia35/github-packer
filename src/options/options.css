@@ -56,7 +56,11 @@ body {
 }
 
 .content {
-    padding: 32px;
+    padding: 24px 32px 8px 32px;
+}
+
+.settings-section {
+    margin-bottom: 32px;
 }
 
 .settings-section h2 {
@@ -67,7 +71,7 @@ body {
 
 .description {
     color: var(--text-muted);
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
 
 .form-group {
@@ -156,7 +160,7 @@ body {
 }
 
 .status-message {
-    margin-top: 8px;
+    margin-top: 12px;
     font-size: 12px;
     min-height: 18px;
 }
@@ -246,7 +250,7 @@ body {
 }
 
 .footer {
-    padding: 24px 32px;
+    padding: 16px 32px;
     background-color: var(--secondary-color);
     border-top: 1px solid var(--border-color);
     text-align: center;

@@ -20,7 +20,6 @@
     document.getElementById("page-title").textContent = t("options.title");
     document.getElementById("auth-title").textContent = t("options.authTitle");
     document.getElementById("auth-desc").textContent = t("options.authDesc");
-    document.getElementById("token-label").textContent = t("options.tokenLabel");
     document.getElementById("github-token").placeholder = t("options.tokenPlaceholder");
     document.getElementById("toggle-token").title = t("options.toggleToken");
     document.getElementById("save-button").textContent = t("options.save");
