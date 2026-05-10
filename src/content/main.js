@@ -160,12 +160,16 @@
     refresh();
 
     try {
-      const isSelectedPredicate = (path) => app.state.isEffectivelyIncluded(path);
       const signal = app.state.getSignal();
-      const result = await app.packager.packSelection(context, isSelectedPredicate, (message, detail) => {
-        app.state.setPackingMessage(detail ? `${message} (${detail})` : message);
-        refresh();
-      }, { signal });
+      const result = await app.packingService.pack({
+        context,
+        signal,
+        isSelectedPredicate: (path) => app.state.isEffectivelyIncluded(path),
+        onProgress: (message, detail) => {
+          app.state.setPackingMessage(detail ? `${message} (${detail})` : message);
+          refresh();
+        }
+      });
 
       app.state.setFailedFiles(result.failed || []);
       app.state.setAborted(result.aborted || false);
