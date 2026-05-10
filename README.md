@@ -41,4 +41,3 @@ To download files from private repositories, you need to set up a Personal Acces
 We take your security seriously:
 - **Zero External Tracking**: No analytics or external API calls (other than GitHub API).
 - **Local Storage**: All credentials and settings stay in your browser.
-- **Open Source**: The code is transparent and auditable.
