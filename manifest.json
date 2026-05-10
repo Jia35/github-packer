@@ -40,7 +40,7 @@
       ],
       "js": [
         "src/shared/constants.js",
-        "src/shared/auth.js",
+        "src/shared/storage.js",
         "src/shared/i18n.js",
         "src/shared/state.js",
         "src/shared/github.js",

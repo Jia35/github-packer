@@ -84,7 +84,7 @@
       );
     }
 
-    const concurrency = await app.auth.getConcurrencyLimit();
+    const concurrency = await app.storage.getConcurrencyLimit();
     updateProgress(onProgress, app.i18n.t("messages.downloadingFiles"), `0 / ${matched.files.length}`);
     const downloadedFiles = (
       await mapWithConcurrency(

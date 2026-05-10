@@ -15,7 +15,7 @@
   }
 
   async function createHeaders(accept) {
-    const token = await app.auth.getToken();
+    const token = await app.storage.getToken();
     const headers = {};
 
     if (accept) {
@@ -94,7 +94,7 @@
   }
 
   async function fetchFileContent(context, branch, path, options = {}) {
-    const token = await app.auth.getToken();
+    const token = await app.storage.getToken();
     let url = "";
     let headers = {};
 

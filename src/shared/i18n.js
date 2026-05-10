@@ -58,7 +58,7 @@
         refreshNotice: "Please refresh GitHub pages to apply changes.",
         infoTitle: "💡 Tips",
         info1: "Permissions (Fine-grained): Repository access <strong>All repositories</strong>, Permissions <strong>Contents</strong> (Read-only).",
-        info2: "Privacy: Token is stored locally in <strong>chrome.storage</strong>. No data is sent to 3rd party servers.",
+        info2: "Token is stored locally in <strong>chrome.storage</strong>. No data is sent to 3rd party servers.",
         info3: "GitHub Docs: ",
         infoLink: "How to create a Personal Access Token?",
         concurrencyLabel: "Concurrent Downloads",
@@ -128,7 +128,7 @@
         refreshNotice: "請重新整理 GitHub 頁面以套用變更。",
         infoTitle: "💡 設定提示",
         info1: "必要權限 (Fine-grained)：Repository access 選擇 <strong>All repositories</strong>，Permissions 僅需勾選 <strong>Contents</strong> (Read-only) 即可。",
-        info2: "隱私說明：此 Token 僅會儲存在您本地瀏覽器的 <strong>chrome.storage</strong> 中，不會傳送至任何第三方伺服器。",
+        info2: "此 Token 僅會儲存在您本地瀏覽器的 <strong>chrome.storage</strong> 中，不會傳送至任何第三方伺服器。",
         info3: "GitHub 官方文件：",
         infoLink: "如何建立 GitHub Personal Access Token？",
         concurrencyLabel: "下載併發數",
@@ -199,7 +199,7 @@
         refreshNotice: "変更を適用するには GitHub ページを更新してください。",
         infoTitle: "💡 ヒント",
         info1: "必要な権限 (Fine-grained): Repository access は <strong>All repositories</strong>、Permissions は <strong>Contents</strong> (Read-only) を選択してください。",
-        info2: "プライバシーについて: トークンはローカルの <strong>chrome.storage</strong> にのみ保存され、外部サーバーには送信されません。",
+        info2: "トークンはローカルの <strong>chrome.storage</strong> にのみ保存され、外部サーバーには送信されません。",
         info3: "GitHub ドキュメント: ",
         infoLink: "Personal Access Token の作成方法は？",
         concurrencyLabel: "同時ダウンロード数",
@@ -269,7 +269,7 @@
         refreshNotice: "변경 사항을 적용하려면 GitHub 페이지를 새로고침하십시오.",
         infoTitle: "💡 팁",
         info1: "필요한 권한 (Fine-grained): Repository access는 <strong>All repositories</strong>, Permissions는 <strong>Contents</strong> (Read-only)를 선택하십시오.",
-        info2: "개인정보 보호: 토큰은 로컬 <strong>chrome.storage</strong>에만 저장되며 외부 서버로 전송되지 않습니다.",
+        info2: "토큰은 로컬 <strong>chrome.storage</strong>에만 저장되며 외부 서버로 전송되지 않습니다.",
         info3: "GitHub 문서: ",
         infoLink: "Personal Access Token 생성 방법은?",
         concurrencyLabel: "동시 다운로드 수",
@@ -301,18 +301,8 @@
   }
 
   async function init() {
-    return new Promise((resolve) => {
-      if (typeof chrome === "undefined" || !chrome.storage) {
-        currentLang = getEffectiveLanguage();
-        resolve();
-        return;
-      }
-
-      chrome.storage.local.get(["gh_packer_language"], (result) => {
-        currentLang = getEffectiveLanguage(result.gh_packer_language);
-        resolve();
-      });
-    });
+    const pref = await app.storage.getLanguagePreference();
+    currentLang = getEffectiveLanguage(pref);
   }
 
   function t(path, params = {}) {

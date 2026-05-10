@@ -1,4 +1,4 @@
-(function bootstrapAuth() {
+(function bootstrapStorage() {
   const app = (window.PackerForGitHub = window.PackerForGitHub || {});
 
   const STORAGE_KEYS = {
@@ -122,7 +122,7 @@
     });
   }
 
-  app.auth = {
+  app.storage = {
     getToken,
     setToken,
     isValidTokenFormat,

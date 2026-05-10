@@ -68,9 +68,9 @@
 
   // Load existing settings
   const [existingToken, existingLang, existingConcurrency] = await Promise.all([
-    app.auth.getToken(),
-    app.auth.getLanguagePreference(),
-    app.auth.getConcurrencyLimit()
+    app.storage.getToken(),
+    app.storage.getLanguagePreference(),
+    app.storage.getConcurrencyLimit()
   ]);
 
   if (existingToken) {
@@ -103,18 +103,18 @@
 
     try {
       await Promise.all([
-        app.auth.setToken(token || null),
-        app.auth.setLanguagePreference(lang),
-        app.auth.setConcurrencyLimit(concurrency)
+        app.storage.setToken(token || null),
+        app.storage.setLanguagePreference(lang),
+        app.storage.setConcurrencyLimit(concurrency)
       ]);
-      
-      const savedMsg = t("options.saved");
-      const refreshNotice = t("options.refreshNotice");
-      showStatus(`${savedMsg} ${refreshNotice}`, "success");
       
       // Update page language immediately if changed
       await app.i18n.init();
       translatePage();
+
+      const savedMsg = t("options.saved");
+      const refreshNotice = t("options.refreshNotice");
+      showStatus(`${savedMsg} ${refreshNotice}`, "success");
     } catch (error) {
       showStatus(t("ui.errorOccurred") + " " + error.message, "error");
       console.error(error);
@@ -127,7 +127,7 @@
       : "Are you sure you want to clear the saved token? This will prevent downloading private repositories.";
       
     if (confirm(confirmMsg)) {
-      await app.auth.setToken(null);
+      await app.storage.setToken(null);
       tokenInput.value = "";
       showStatus(t("options.clear") + " OK", "success");
     }
