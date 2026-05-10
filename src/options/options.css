@@ -81,6 +81,7 @@ body {
 .form-group label {
     display: block;
     font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .slider-row {
@@ -107,7 +108,7 @@ body {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group input:focus {
+.form-group input:focus-visible {
     border-color: #0969da;
     box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
     outline: none;
@@ -139,6 +140,11 @@ body {
     border: 2px solid #ffffff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     transition: transform 0.1s;
+}
+
+.range-input:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid #0969da;
+    outline-offset: 3px;
 }
 
 .range-input::-webkit-slider-thumb:hover {
@@ -177,7 +183,7 @@ body {
     background-position: right 12px center;
 }
 
-.select-input:focus {
+.select-input:focus-visible {
     border-color: #0969da;
     box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
     outline: none;
@@ -234,6 +240,11 @@ body {
 .icon-button svg {
     display: block;
     pointer-events: none;
+}
+
+.icon-button:focus-visible {
+    outline: 2px solid #0969da;
+    outline-offset: 2px;
 }
 
 .status-message {
@@ -313,6 +324,11 @@ body {
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
     border: 1px solid transparent;
+}
+
+.button:focus-visible {
+    outline: 2px solid #0969da;
+    outline-offset: 2px;
 }
 
 .button--primary {

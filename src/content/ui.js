@@ -3,9 +3,9 @@
   const constants = app.constants;
 
   const ICONS = {
-    download: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg>`,
-    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="packer-for-github-spinner" style="margin-right: 8px;"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`,
-    cancel: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;"><path d="M2.343 13.657A8 8 0 1 1 13.657 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path></svg>`
+    download: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg>`,
+    spinner: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="packer-for-github-spinner" style="margin-right: 8px;" aria-hidden="true"><path d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5.75.75 0 0 1 1.5 0 8 8 0 1 1-8-8 .75.75 0 0 1 0 1.5Z"></path></svg>`,
+    cancel: `<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 8px;" aria-hidden="true"><path d="M2.343 13.657A8 8 0 1 1 13.657 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path></svg>`
   };
 
   function setNodeChildren(node, children) {
@@ -44,6 +44,9 @@
 
     setNodeChildren(button, [icon, label]);
     button.dataset.mode = nextMode;
+    
+    // a11y: 同步更新 aria-label
+    button.setAttribute("aria-label", labelText);
     
     // 切換樣式
     button.classList.toggle("packer-for-github-button--primary", !isPacking);
@@ -121,12 +124,18 @@
   function createCheckbox(item) {
     const wrapper = document.createElement("label");
     wrapper.className = "packer-for-github-checkbox";
-    wrapper.title = item.kind === "directory" ? app.i18n.t('ui.selectFolder') : app.i18n.t('ui.selectFile');
+    const labelText = item.kind === "directory" ? app.i18n.t('ui.selectFolder') : app.i18n.t('ui.selectFile');
+    wrapper.title = labelText;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.className = "packer-for-github-checkbox__input";
     checkbox.checked = app.state.isSelected(item.path);
+    
+    // a11y: 增加對特定檔案或資料夾的描述
+    const itemName = item.path.split("/").pop() || item.path;
+    checkbox.setAttribute("aria-label", `${labelText}: ${itemName}`);
+    
     checkbox.setAttribute(constants.checkboxMarker, "true");
     checkbox.setAttribute(constants.itemPathMarker, item.path);
     checkbox.setAttribute(constants.itemKindMarker, item.kind);
@@ -272,10 +281,13 @@
     let toolbar = document.getElementById(constants.toolbarId);
 
     if (!toolbar) {
-      toolbar = document.createElement("section");
+      toolbar = document.createElement("div"); // 使用更通用的 div 搭配 role
       toolbar.id = constants.toolbarId;
       toolbar.className = "packer-for-github-toolbar";
-      toolbar.title = "Packer for GitHub";
+      
+      // a11y: 標記為工具列並提供標籤
+      toolbar.setAttribute("role", "toolbar");
+      toolbar.setAttribute("aria-label", "Packer for GitHub Toolbar");
       toolbar.setAttribute(constants.toolbarMarker, "true");
 
       const left = document.createElement("div");
@@ -285,28 +297,38 @@
       selectAllButton.type = "button";
       selectAllButton.className = "packer-for-github-button packer-for-github-button--secondary";
       selectAllButton.dataset.action = "toggle-all";
+      selectAllButton.setAttribute("aria-label", app.i18n.t('labels.selectAll'));
       selectAllButton.addEventListener("click", handlers.onToggleAll);
 
       const clearSelectionButton = document.createElement("button");
       clearSelectionButton.type = "button";
       clearSelectionButton.className = "packer-for-github-button packer-for-github-button--secondary";
       clearSelectionButton.dataset.action = "clear-selection";
+      clearSelectionButton.setAttribute("aria-label", app.i18n.t('labels.clearSelection'));
       clearSelectionButton.addEventListener("click", handlers.onClearSelection);
 
       const packButton = document.createElement("button");
       packButton.type = "button";
       packButton.className = "packer-for-github-button packer-for-github-button--primary";
       packButton.dataset.action = "pack";
+      packButton.setAttribute("aria-label", app.i18n.t('labels.pack'));
       packButton.addEventListener("click", handlers.onPack);
       updatePackButtonContent(packButton, false);
 
       const status = document.createElement("p");
       status.className = "packer-for-github-toolbar__status";
       status.dataset.role = "status";
+      
+      // a11y: 使用 status 角色與 polite 播報，讓選取數量變化時能告知使用者
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
 
       const errors = document.createElement("div");
       errors.className = "packer-for-github-toolbar__errors";
       errors.dataset.role = "error-report";
+      
+      // a11y: 使用 alert 角色，發生錯誤時立即中斷並播報
+      errors.setAttribute("role", "alert");
       errors.style.display = "none";
 
       left.appendChild(selectAllButton);
@@ -316,6 +338,7 @@
       const logo = document.createElement("img");
       logo.className = "packer-for-github-toolbar__logo";
       logo.alt = "Packer for GitHub Logo";
+      logo.setAttribute("aria-hidden", "true"); // 裝飾性 Logo 對螢幕閱讀器隱藏
 
       toolbar.appendChild(logo);
       toolbar.appendChild(errors);
@@ -346,9 +369,11 @@
     const packingMessage = app.state.getPackingMessage();
     const hasSelection = selectedCount > 0;
 
-    toggleAllButton.textContent = allVisibleSelected
+    const nextToggleLabel = allVisibleSelected
       ? app.i18n.t('labels.clearAll')
       : app.i18n.t('labels.selectAll');
+    toggleAllButton.textContent = nextToggleLabel;
+    toggleAllButton.setAttribute("aria-label", nextToggleLabel);
     toggleAllButton.disabled = isPacking || items.length === 0;
     clearSelectionButton.textContent = app.i18n.t('labels.clearSelection');
     clearSelectionButton.disabled = isPacking || !hasSelection;
@@ -409,6 +434,14 @@
       const status = app.state.getSelectionStatus(item.path);
       checkbox.checked = status === "checked";
       checkbox.indeterminate = status === "indeterminate";
+      
+      // a11y: 同步更新 aria-checked 以支援 Mixed 狀態
+      if (status === "indeterminate") {
+        checkbox.setAttribute("aria-checked", "mixed");
+      } else {
+        checkbox.removeAttribute("aria-checked");
+      }
+
       markRowSelection(item.element, status !== "unchecked");
     });
   }

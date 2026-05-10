@@ -30,8 +30,8 @@
                 <div class="form-group">
                     <label for="concurrency-range" id="concurrency-label">下載併發數</label>
                     <div class="slider-row">
-                        <input type="range" id="concurrency-range" min="1" max="10" step="1" value="4" class="range-input">
-                        <span id="concurrency-value" class="value-display">4</span>
+                        <input type="range" id="concurrency-range" min="1" max="10" step="1" value="4" class="range-input" aria-valuemin="1" aria-valuemax="10" aria-valuenow="4">
+                        <span id="concurrency-value" class="value-display" aria-hidden="true">4</span>
                     </div>
                     <p id="concurrency-desc" class="help-text">
                         同時下載的檔案數量。較大數值可加速，但可能導致網路壓力過大或觸發 GitHub API 限制。
@@ -51,8 +51,8 @@
                     <div class="input-row">
                         <div class="input-with-icon">
                             <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx" spellcheck="false">
-                            <button type="button" id="toggle-token" class="icon-button" title="顯示/隱藏 Token">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <button type="button" id="toggle-token" class="icon-button" title="顯示/隱藏 Token" aria-pressed="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
                         </div>
                         <button id="clear-button" class="button button--secondary">清除</button>
@@ -73,7 +73,7 @@
             <!-- 底部主操作區域 -->
             <div class="main-actions">
                 <button id="save-button" class="button button--primary">儲存設定</button>
-                <div id="status-message" class="status-message"></div>
+                <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
             </div>
         </main>
 

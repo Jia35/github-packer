@@ -167,6 +167,12 @@
   transform: translateY(0);
 }
 
+.packer-for-github-button:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(9, 105, 218, 0.3);
+}
+
 .packer-for-github-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -278,6 +284,11 @@ html:not(.packer-for-github-has-selection) [data-packer-for-github-row="true"]:h
   height: 14px;
   margin: 0;
   cursor: pointer;
+}
+
+.packer-for-github-checkbox__input:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
 }
 
 [data-packer-for-github-row="true"].packer-for-github-selected {
