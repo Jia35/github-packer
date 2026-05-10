@@ -84,11 +84,12 @@
       );
     }
 
+    const concurrency = await app.auth.getConcurrencyLimit();
     updateProgress(onProgress, app.i18n.t("messages.downloadingFiles"), `0 / ${matched.files.length}`);
     const downloadedFiles = (
       await mapWithConcurrency(
         matched.files,
-        4,
+        concurrency,
         async (file, index) => {
           try {
             const bytes = await githubApi.fetchFileContent(context, branch, file.path, { signal });

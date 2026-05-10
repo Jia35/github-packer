@@ -61,6 +61,8 @@
         info2: "Privacy: Token is stored locally in <strong>chrome.storage</strong>. No data is sent to 3rd party servers.",
         info3: "GitHub Docs: ",
         infoLink: "How to create a Personal Access Token?",
+        concurrencyLabel: "Concurrent Downloads",
+        concurrencyHelp: "Number of files to download simultaneously. Larger values can speed up the process but may cause excessive network load or trigger GitHub API limits.",
         languages: {
           auto: "Follow Browser Language",
           zh_TW: "繁體中文",
@@ -129,6 +131,8 @@
         info2: "隱私說明：此 Token 僅會儲存在您本地瀏覽器的 <strong>chrome.storage</strong> 中，不會傳送至任何第三方伺服器。",
         info3: "GitHub 官方文件：",
         infoLink: "如何建立 GitHub Personal Access Token？",
+        concurrencyLabel: "下載併發數",
+        concurrencyHelp: "同時下載的檔案數量。較大數值可加速，但可能導致網路壓力過大或觸發 GitHub API 限制。",
         footerPrefix: "© 2026 Packer for GitHub. ",
         languages: {
           auto: "跟隨瀏覽器語言",
@@ -198,6 +202,8 @@
         info2: "プライバシーについて: トークンはローカルの <strong>chrome.storage</strong> にのみ保存され、外部サーバーには送信されません。",
         info3: "GitHub ドキュメント: ",
         infoLink: "Personal Access Token の作成方法は？",
+        concurrencyLabel: "同時ダウンロード数",
+        concurrencyHelp: "同時にダウンロードするファイル数です。値を大きくすると速度は上がりますが、ネットワークへの負荷が増大したり、GitHub API の制限に達する可能性があります。",
         languages: {
           auto: "ブラウザの言語に従う",
           zh_TW: "繁體中文",
@@ -266,6 +272,8 @@
         info2: "개인정보 보호: 토큰은 로컬 <strong>chrome.storage</strong>에만 저장되며 외부 서버로 전송되지 않습니다.",
         info3: "GitHub 문서: ",
         infoLink: "Personal Access Token 생성 방법은?",
+        concurrencyLabel: "동시 다운로드 수",
+        concurrencyHelp: "동시에 다운로드할 파일 수입니다. 값을 크게 하면 속도가 빨라지지만 네트워크 부하가 증가하거나 GitHub API 제한이 발생할 수 있습니다.",
         languages: {
           auto: "브라우저 언어 따르기",
           zh_TW: "繁體中文",

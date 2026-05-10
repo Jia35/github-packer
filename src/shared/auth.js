@@ -3,7 +3,8 @@
 
   const STORAGE_KEYS = {
     GITHUB_TOKEN: "gh_packer_token",
-    LANGUAGE: "gh_packer_language"
+    LANGUAGE: "gh_packer_language",
+    CONCURRENCY: "gh_packer_concurrency"
   };
 
   /**
@@ -86,11 +87,48 @@
     });
   }
 
+  /**
+   * Retrieves the concurrency limit.
+   * @returns {Promise<number>}
+   */
+  async function getConcurrencyLimit() {
+    return new Promise((resolve) => {
+      if (typeof chrome === "undefined" || !chrome.storage) {
+        resolve(4);
+        return;
+      }
+      chrome.storage.local.get([STORAGE_KEYS.CONCURRENCY], (result) => {
+        const val = parseInt(result[STORAGE_KEYS.CONCURRENCY], 10);
+        resolve(isNaN(val) ? 4 : val);
+      });
+    });
+  }
+
+  /**
+   * Saves the concurrency limit.
+   * @param {number} value 
+   * @returns {Promise<void>}
+   */
+  async function setConcurrencyLimit(value) {
+    return new Promise((resolve) => {
+      if (typeof chrome === "undefined" || !chrome.storage) {
+        resolve();
+        return;
+      }
+      const val = Math.max(1, Math.min(10, parseInt(value, 10) || 4));
+      chrome.storage.local.set({ [STORAGE_KEYS.CONCURRENCY]: val }, () => {
+        resolve();
+      });
+    });
+  }
+
   app.auth = {
     getToken,
     setToken,
     isValidTokenFormat,
     getLanguagePreference,
-    setLanguagePreference
+    setLanguagePreference,
+    getConcurrencyLimit,
+    setConcurrencyLimit
   };
 })();

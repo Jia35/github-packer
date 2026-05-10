@@ -11,6 +11,8 @@
   const toggleButton = document.getElementById("toggle-token");
   const statusMessage = document.getElementById("status-message");
   const languageSelect = document.getElementById("language-select");
+  const concurrencyRange = document.getElementById("concurrency-range");
+  const concurrencyValue = document.getElementById("concurrency-value");
 
   const eyeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap round="stroke-linejoin="round" class="icon-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
   const eyeOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-eye-off"><path d="M9.88 9.88 3.59 3.59"/><path d="M2 12s3-7 10-7a9 9 0 0 1 8.39 5.35"/><path d="M22 12s-3 7-10 7a9 9 0 0 1-5.61-2.02"/><path d="m17 17-6.41-6.41"/><path d="m21.21 21.21-18.42-18.42"/><circle cx="12" cy="12" r="3"/></svg>`;
@@ -26,6 +28,8 @@
     document.getElementById("clear-button").textContent = t("options.clear");
     document.getElementById("general-title").textContent = t("options.generalTitle");
     document.getElementById("language-label").textContent = t("options.languageLabel");
+    document.getElementById("concurrency-label").textContent = t("options.concurrencyLabel");
+    document.getElementById("concurrency-desc").textContent = t("options.concurrencyHelp");
     document.getElementById("info-title").textContent = t("options.infoTitle");
     
     // Info list
@@ -58,10 +62,15 @@
     toggleButton.innerHTML = isPassword ? eyeOffIcon : eyeIcon;
   });
 
+  concurrencyRange.addEventListener("input", () => {
+    concurrencyValue.textContent = concurrencyRange.value;
+  });
+
   // Load existing settings
-  const [existingToken, existingLang] = await Promise.all([
+  const [existingToken, existingLang, existingConcurrency] = await Promise.all([
     app.auth.getToken(),
-    app.auth.getLanguagePreference()
+    app.auth.getLanguagePreference(),
+    app.auth.getConcurrencyLimit()
   ]);
 
   if (existingToken) {
@@ -69,6 +78,10 @@
   }
   if (existingLang) {
     languageSelect.value = existingLang;
+  }
+  if (existingConcurrency) {
+    concurrencyRange.value = existingConcurrency;
+    concurrencyValue.textContent = existingConcurrency;
   }
 
   function showStatus(message, type) {
@@ -86,11 +99,13 @@
   saveButton.addEventListener("click", async () => {
     const token = tokenInput.value.trim();
     const lang = languageSelect.value;
+    const concurrency = parseInt(concurrencyRange.value, 10);
 
     try {
       await Promise.all([
         app.auth.setToken(token || null),
-        app.auth.setLanguagePreference(lang)
+        app.auth.setLanguagePreference(lang),
+        app.auth.setConcurrencyLimit(concurrency)
       ]);
       
       const savedMsg = t("options.saved");

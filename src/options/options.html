@@ -27,6 +27,16 @@
                         <option value="ko">한국어</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="concurrency-range" id="concurrency-label">下載併發數</label>
+                    <div class="slider-row">
+                        <input type="range" id="concurrency-range" min="1" max="10" step="1" value="4" class="range-input">
+                        <span id="concurrency-value" class="value-display">4</span>
+                    </div>
+                    <p id="concurrency-desc" class="help-text">
+                        同時下載的檔案數量。較大數值可加速，但可能導致網路壓力過大或觸發 GitHub API 限制。
+                    </p>
+                </div>
             </section>
 
             <!-- 認證設定改為下方 -->
