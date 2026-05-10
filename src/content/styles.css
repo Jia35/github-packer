@@ -290,11 +290,6 @@ html:not(.packer-for-github-has-selection) [data-packer-for-github-row="true"]:h
   }
 }
 
-#packer-for-github-toolbar.packer-for-github-loading .packer-for-github-button--primary {
-  background: #6e7681;
-  pointer-events: none;
-  opacity: 0.8;
-}
 
 /* 打包中狀態文字微動動畫 */
 @keyframes packer-for-github-pulse {
