@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Packer for GitHub",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Selectively pick and pack files or folders from any GitHub repository into a single ZIP archive.",
   "icons": {
     "16": "icons/logo_16.png",

@@ -223,7 +223,8 @@
   width: 14px;
   min-width: 14px;
   height: 14px;
-  margin-right: 8px; /* 預設維持間距（如中間檔案清單） */
+  margin-left: -6px; /* 減少左方空白，使其更貼近容器邊緣 */
+  margin-right: 8px; /* 預設維持右間距（如中間檔案清單） */
   vertical-align: middle;
   flex: 0 0 auto;
   opacity: 0;
@@ -231,10 +232,11 @@
   transition: opacity 120ms ease;
 }
 
-/* 側邊欄檔案樹專用：移除右邊距以符合緊湊佈局 */
+/* 側邊欄檔案樹專用：採用更緊湊的佈局 */
 #repos-file-tree .packer-for-github-checkbox,
 [data-testid*="file-tree"] .packer-for-github-checkbox {
-  margin-right: 0;
+  margin-left: -6px;
+  margin-right: -2px;
 }
 
 
