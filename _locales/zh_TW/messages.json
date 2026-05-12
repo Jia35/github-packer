@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Packer for GitHub - GitHub 隨選打包下載工具",
+    "description": "擴充功能名稱"
+  },
+  "appDesc": {
+    "message": "從任何 GitHub 儲存庫中，任意選取檔案或資料夾打包成單一 ZIP 壓縮檔下載。",
+    "description": "擴充功能描述"
+  }
+}

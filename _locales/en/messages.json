@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Packer for GitHub - On-Demand GitHub Download Tool",
+    "description": "The name of the extension"
+  },
+  "appDesc": {
+    "message": "Selectively pick and pack files or folders from any GitHub repository into a single ZIP archive.",
+    "description": "The description of the extension"
+  }
+}

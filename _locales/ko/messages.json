@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Packer for GitHub",
+    "description": "확장 프로그램 이름"
+  },
+  "appDesc": {
+    "message": "GitHub 저장소에서 원하는 파일이나 폴더를 선택하여 하나의 ZIP 압축 파일로 패킹하고 다운로드합니다.",
+    "description": "확장 프로그램 설명"
+  }
+}

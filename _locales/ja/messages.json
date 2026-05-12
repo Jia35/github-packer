@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Packer for GitHub",
+    "description": "拡張機能の名前"
+  },
+  "appDesc": {
+    "message": "任意の GitHub リポジトリから、ファイルやフォルダを個別に選択して 1 つの ZIP アーカイブにまとめてダウンロードします。",
+    "description": "拡張機能の説明"
+  }
+}
