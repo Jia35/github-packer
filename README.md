@@ -1,6 +1,7 @@
 # Packer for GitHub
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/nhlchekbehflbffdjgmgohifmdkcgonh.svg)](https://chromewebstore.google.com/detail/nhlchekbehflbffdjgmgohifmdkcgonh)
 
 A browser extension that allows you to selectively pick files and folders from any GitHub repository and download them as a single ZIP archive. No more cloning entire repositories just for a few files.
 
@@ -15,10 +16,12 @@ A browser extension that allows you to selectively pick files and folders from a
 - **SPA Compatibility**: Seamlessly works with GitHub's client-side navigation (Single Page Application).
 - **Secure Storage**: Your PAT is stored locally in `chrome.storage` and never sent to external servers.
 
-## 🚀 Installation (Development)
+## 🚀 Installation
 
-Currently, Packer for GitHub is in development. You can load it manually:
+### 1. From Chrome Web Store (Recommended)
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/nhlchekbehflbffdjgmgohifmdkcgonh).
 
+### 2. Manual Installation (Development)
 1. Download or clone this repository.
 2. Open Chrome and navigate to `chrome://extensions`.
 3. Enable **Developer mode** (top right corner).

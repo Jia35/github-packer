@@ -1,6 +1,7 @@
 # Packer for GitHub
 
 [![授權條款: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/nhlchekbehflbffdjgmgohifmdkcgonh.svg)](https://chromewebstore.google.com/detail/nhlchekbehflbffdjgmgohifmdkcgonh)
 
 Packer for GitHub 是一個瀏覽器擴充功能，讓你能夠從任何 GitHub 儲存庫中，自由挑選特定的檔案或資料夾，並直接打包成一個 ZIP 壓縮檔下載。從此不再需要為了幾個檔案而 Clone 整個儲存庫。
 
@@ -15,10 +16,12 @@ Packer for GitHub 是一個瀏覽器擴充功能，讓你能夠從任何 GitHub 
 - **相容 SPA 導覽**：完美相容 GitHub 的單頁面應用 (SPA) 導覽，切換路徑也不會失效。
 - **安全儲存**：您的 PAT 僅儲存於本地 `chrome.storage`，絕不會傳送到第三方伺服器。
 
-## 🚀 安裝方式 (開發版)
+## 🚀 安裝方式
 
-目前 Packer for GitHub 仍在開發階段，您可以手動載入：
+### 1. 從 Chrome 線上應用程式商店下載 (推薦)
+直接前往 [Chrome 線上應用程式商店](https://chromewebstore.google.com/detail/nhlchekbehflbffdjgmgohifmdkcgonh) 進行安裝。
 
+### 2. 手動安裝 (開發版)
 1. 下載或 Clone 本儲存庫。
 2. 開啟 Chrome 瀏覽器並前往 `chrome://extensions`。
 3. 開啟右上角的 **「開發者模式」**。
