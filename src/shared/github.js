@@ -276,6 +276,23 @@
     );
   }
 
+  function isMarkdownContent(element) {
+    if (!element) {
+      return false;
+    }
+
+    // 檢查是否位在 GitHub 的文章或評論容器內
+    const articleSelectors = [
+      ".markdown-body",
+      ".comment-body",
+      "article",
+      "#readme",
+      ".js-wiki-body"
+    ];
+
+    return Boolean(element.closest(articleSelectors.join(",")));
+  }
+
   function findRepositoryItems(context) {
     if (!context) {
       return [];
@@ -317,7 +334,8 @@
         return;
       }
 
-      if (row.closest("#readme")) {
+      // 嚴格排除任何位於文章內容區域的連結
+      if (isMarkdownContent(link) || row.closest("#readme")) {
         return;
       }
 
@@ -325,6 +343,16 @@
       const inSidebarTree = isSidebarTreeLink(link);
 
       if (!inMainContent && !inSidebarTree) {
+        return;
+      }
+
+      // 針對主頁面檔案列表，我們只接受符合特定 ID 模式的 tr，或者是在特定容器內的元素
+      const isOfficialRow = 
+        row.matches('tr[id^="folder-row-"]') || 
+        row.matches('[role="row"]') || 
+        row.matches('.Box-row');
+
+      if (inMainContent && !isOfficialRow && !inSidebarTree) {
         return;
       }
 

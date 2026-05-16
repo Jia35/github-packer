@@ -206,6 +206,12 @@
       return;
     }
 
+    // 安全檢查：絕對不要動到段落標籤或其他純文字容器
+    const forbiddenTags = ["P", "SPAN", "BLOCKQUOTE", "ARTICLE"];
+    if (forbiddenTags.includes(target.tagName)) {
+      return;
+    }
+
     const { wrapper, checkbox } = createCheckbox(item);
     checkbox.addEventListener("change", () => {
       onChange(item, checkbox.checked);

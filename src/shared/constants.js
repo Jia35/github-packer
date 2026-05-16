@@ -26,6 +26,7 @@
       fileLinks:
         'a[href*="/blob/"], a[href*="/tree/"]',
       rowContainers: [
+        'tr[id^="folder-row-"]',
         '[role="row"]',
         "tr",
         ".Box-row",

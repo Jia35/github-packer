@@ -245,11 +245,16 @@
   pointer-events: none;
 }
 
-.packer-for-github-inline-target {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
+/* 僅在合法的檔案列表容器內啟用 Flex 佈局，避免污染 README 段落 */
+tr[id^="folder-row-"] .packer-for-github-inline-target,
+[role="row"] .packer-for-github-inline-target,
+.Box-row .packer-for-github-inline-target,
+#repos-file-tree .packer-for-github-inline-target,
+[data-testid*="file-tree"] .packer-for-github-inline-target {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .packer-for-github-parent-directory-target {
